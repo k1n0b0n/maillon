@@ -17,25 +17,29 @@ export async function* rows(file: string): AsyncGenerator<Record<string, string>
   yield* createReadStream(file).pipe(parse({ columns: true, bom: true, skip_empty_lines: true, relax_column_count: true }));
 }
 
-async function header(file: string): Promise<string[]> {
+export async function header(file: string): Promise<string[]> {
   for await (const record of createReadStream(file).pipe(parse({ bom: true, to_line: 1 }))) {
     return record as string[];
   }
   return [];
 }
 
-function csvLine(values: string[]): string {
+export function csvLine(values: string[]): string {
   return values.map((value) => (/[",\r\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value)).join(',') + '\n';
 }
 
 export async function extract(zip: string, dir: string): Promise<void> {
   await run('unzip', ['-qo', zip, '-d', dir]);
+  checkFeed(dir);
+}
+
+export function checkFeed(dir: string): void {
   const missing = REQUIRED.filter((name) => !existsSync(join(dir, name)));
   if (missing.length > 0) {
-    throw new Error(`${zip} lacks ${missing.join(', ')}`);
+    throw new Error(`${dir} lacks ${missing.join(', ')}`);
   }
   if (!existsSync(join(dir, 'calendar.txt')) && !existsSync(join(dir, 'calendar_dates.txt'))) {
-    throw new Error(`${zip} has no calendar`);
+    throw new Error(`${dir} has no calendar`);
   }
 }
 

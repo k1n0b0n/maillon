@@ -1,0 +1,50 @@
+# Golden routes (docs/prd.md): each search keeps its expected properties on golden/dataset, a frozen Tuesday.
+# Properties, never minutes: `never` lists the modes no itinerary may use, `some` a mode one itinerary uses at least.
+# Every golden route expects at least one itinerary.
+- id: GR1
+  title: Mérignac Centre → Talence Thouars, where a bus would be the fastest
+  from: 44.84290,-0.64560
+  to: 44.79900,-0.58800
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  expect:
+    never: [bus]
+
+- id: GR2
+  title: Gare Saint-Jean → Place de la Bourse at 8:00, a peak hour
+  from: 44.82577,-0.55681
+  to: 44.84140,-0.57074
+  at: 2026-10-27T08:00:00+01:00
+  option: transitBike
+  expect:
+    never: [tram, bus]
+
+- id: GR3
+  title: Gare Saint-Jean → Place de la Bourse at 10:30, between the peaks
+  from: 44.82577,-0.55681
+  to: 44.84140,-0.57074
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  expect:
+    some: tram
+    never: [bus]
+
+- id: GR4
+  title: Lormont Bas → La Cité du Vin, across the Garonne
+  from: 44.87900,-0.53300
+  to: 44.86208,-0.54965
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  expect:
+    some: ferry
+    never: [bus]
+
+- id: GR5
+  title: Pessac → Gare Saint-Jean
+  from: 44.80562,-0.63084
+  to: 44.82577,-0.55681
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  expect:
+    some: train
+    never: [bus]

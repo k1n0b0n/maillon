@@ -1,0 +1,4 @@
+service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date,service_name
+2027_HIVER-TR_A100-Lun-Mer-29,0,1,1,0,0,0,0,20261027,20261027,"2026-10-26 → 10-28 (lun, mar, mer)"
+gen:6439684d23,1,1,1,0,0,0,0,20261027,20261027,(gen:6439684d23)
+ineobus:27,0,1,0,0,0,0,0,20261027,20261027,

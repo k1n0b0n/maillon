@@ -26,7 +26,8 @@ Everything runs in Docker; nothing else is needed on the host.
 | All quality gates: types, lint, boundaries, unit tests | `docker compose run --rm --no-deps app npm run check` |
 | One test file | `docker compose run --rm --no-deps app npx vitest run src/domain/search.test.ts` |
 | Build a release of the engine's data and restart the engine on it (the first run takes about a minute) | `sh scripts/refresh-data.sh` |
-| Replay a past day's data (golden routes) | `PIPELINE_TODAY=2026-10-26 docker compose run --rm pipeline` |
+| Golden routes on the frozen dataset (`golden/routes.yaml`) | `sh scripts/golden.sh` |
+| Rebuild the frozen dataset from the last downloads | `sh scripts/freeze-dataset.sh 2026-10-27` |
 | Add a dependency | `docker compose run --rm --no-deps app npm install <package>` |
 | Build and smoke-test the production image | `docker build --target production -t maillon-app -f docker/app/Dockerfile .`, run it, then `sh scripts/smoke.sh http://localhost:4321` |
 
