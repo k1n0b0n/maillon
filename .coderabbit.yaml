@@ -17,7 +17,7 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
-    # The open-source plan allows about one review an hour: one review per pull request, when it is marked ready.
+    # The open-source plan allows about one review an hour: one review per pull request, when it opens.
     auto_incremental_review: false
     # Planning pull requests are reviewed by the maintainer only.
     ignore_title_keywords:
