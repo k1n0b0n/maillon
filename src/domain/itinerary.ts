@@ -5,6 +5,11 @@ export interface Coordinates {
   lon: number;
 }
 
+export interface Place {
+  name: string;
+  coordinates: Coordinates;
+}
+
 export interface Leg {
   mode: Mode;
   from: string;
@@ -46,6 +51,13 @@ export function isTransit(leg: Leg): boolean {
 
 export function transfers(itinerary: Itinerary): number {
   return Math.max(0, itinerary.legs.filter(isTransit).length - 1);
+}
+
+/** The one that arrives first, then the one with fewer changes. */
+export function earliestArrival(itineraries: Itinerary[]): Itinerary | undefined {
+  return itineraries.toSorted(
+    (a, b) => a.arrival.getTime() - b.arrival.getTime() || transfers(a) - transfers(b),
+  )[0];
 }
 
 export function options(comparison: Comparison, option: Option): Itinerary[] {

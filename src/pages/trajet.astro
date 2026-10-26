@@ -1,24 +1,103 @@
 ---
+import { MOTIS_URL } from 'astro:env/server';
+import { findPlace } from '../adapters/motis/geocode.ts';
+import { compare } from '../adapters/motis/plan.ts';
+import ItineraryText from '../components/ItineraryText.astro';
 import SearchForm from '../components/SearchForm.astro';
+import { earliestArrival, type Itinerary, type Place } from '../domain/itinerary.ts';
 import { parseSearch } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
 
+type Outcome =
+  | { kind: 'missing' }
+  | { kind: 'unknown'; texts: string[] }
+  | { kind: 'down' }
+  | { kind: 'none'; from: Place; to: Place }
+  | { kind: 'found'; from: Place; to: Place; itinerary: Itinerary };
+
 const parsed = parseSearch(Astro.url.searchParams);
+const values = parsed.complete ? parsed.search : parsed.values;
+
+async function search(texts: { from: string; to: string }): Promise<Outcome> {
+  const [from, to] = await Promise.all([findPlace(MOTIS_URL, texts.from), findPlace(MOTIS_URL, texts.to)]);
+  if (from === undefined || to === undefined) {
+    return { kind: 'unknown', texts: [from ? undefined : texts.from, to ? undefined : texts.to].filter((text) => text !== undefined) };
+  }
+  const comparison = await compare(MOTIS_URL, {
+    from: from.coordinates,
+    to: to.coordinates,
+    time: new Date(),
+    arriveBy: false,
+    folding: false,
+  });
+  const itinerary = earliestArrival(comparison.transit);
+  return itinerary ? { kind: 'found', from, to, itinerary } : { kind: 'none', from, to };
+}
+
+let outcome: Outcome;
+if (!parsed.complete) {
+  outcome = { kind: 'missing' };
+} else {
+  try {
+    outcome = await search(parsed.search);
+  } catch (error) {
+    console.error('search failed:', error);
+    outcome = { kind: 'down' };
+    Astro.response.status = 503;
+  }
+}
+
+const title =
+  outcome.kind === 'found' || outcome.kind === 'none'
+    ? `${outcome.from.name} → ${outcome.to.name}`
+    : outcome.kind === 'missing'
+      ? 'Erreur – Où allez-vous ?'
+      : `Erreur – ${values.from} → ${values.to}`;
 ---
 
-{
-  parsed.complete ? (
-    <Base title={`${parsed.search.from} → ${parsed.search.to}`}>
-      <h1>
-        {parsed.search.from} → {parsed.search.to}
-      </h1>
-      <p>Le calcul des trajets arrive bientôt.</p>
-      <SearchForm values={parsed.search} />
-    </Base>
-  ) : (
-    <Base title="Erreur – Où allez-vous ?">
-      <h1>Où allez-vous ?</h1>
-      <SearchForm values={parsed.values} missing={parsed.missing} />
-    </Base>
-  )
-}
+<Base title={title}>
+  {
+    outcome.kind === 'found' && (
+      <>
+        <h1>
+          {outcome.from.name} → {outcome.to.name}
+        </h1>
+        <h2>En transports en commun</h2>
+        <ItineraryText itinerary={outcome.itinerary} origin={outcome.from.name} destination={outcome.to.name} />
+        <h2>Modifier la recherche</h2>
+      </>
+    )
+  }
+  {
+    outcome.kind === 'none' && (
+      <>
+        <h1>
+          {outcome.from.name} → {outcome.to.name}
+        </h1>
+        <p role="status">Aucun trajet en transports en commun ne part dans les prochaines heures.</p>
+        <h2>Modifier la recherche</h2>
+      </>
+    )
+  }
+  {
+    outcome.kind === 'unknown' && (
+      <>
+        <h1>Lieu introuvable</h1>
+        <p role="alert">
+          Nous ne trouvons pas {outcome.texts.map((text) => `« ${text} »`).join(' ni ')}. Essayez un nom d’arrêt ou une
+          adresse.
+        </p>
+      </>
+    )
+  }
+  {
+    outcome.kind === 'down' && (
+      <>
+        <h1>Calcul indisponible</h1>
+        <p role="alert">Le calcul d’itinéraire ne répond pas pour le moment. Réessayez dans une minute.</p>
+      </>
+    )
+  }
+  {outcome.kind === 'missing' && <h1>Où allez-vous ?</h1>}
+  <SearchForm values={values} missing={parsed.complete ? [] : parsed.missing} />
+</Base>

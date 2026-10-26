@@ -42,14 +42,17 @@ const MODES: Record<string, Mode> = {
   NIGHT_RAIL: 'train',
 };
 
+/** The engine names the search's two ends; the page knows them better. */
+const ENDS = new Set(['START', 'END']);
+
 /** The engine's own limit on a direct walk or ride: without it, MOTIS drops a walk over 30 minutes. */
 const MAX_DIRECT_SECONDS = 6 * 60 * 60;
 
 function leg(motis: MotisLeg): Leg {
   return {
     mode: MODES[motis.mode] ?? 'other',
-    from: motis.from.name,
-    to: motis.to.name,
+    from: ENDS.has(motis.from.name) ? '' : motis.from.name,
+    to: ENDS.has(motis.to.name) ? '' : motis.to.name,
     departure: new Date(motis.startTime),
     arrival: new Date(motis.endTime),
     ...(motis.distance === undefined ? {} : { distanceMeters: Math.round(motis.distance) }),

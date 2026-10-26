@@ -22,7 +22,7 @@ describe('itinerary', () => {
     });
 
     expect(mapped.legs.map(({ mode }) => mode)).toEqual(['bike', 'tram', 'train']);
-    expect(mapped.legs[0]?.distanceMeters).toBe(16);
+    expect(mapped.legs[0]).toMatchObject({ from: '', distanceMeters: 16 });
     expect(mapped.legs[1]).toMatchObject({ line: 'F', headsign: 'Mérignac Aéroport', to: 'Tauzia' });
     expect(mapped.arrival.toISOString()).toBe('2026-10-27T09:41:00.000Z');
   });
