@@ -36,7 +36,7 @@ export const BIKE_RULES: Record<Vehicle, BikeRule> = {
     source: BORDEAUX_METROPOLE,
     checkedOn: '2026-10-26',
   },
-  bus: { bikes: 'folded-only', source: BORDEAUX_METROPOLE, checkedOn: '2026-10-26' },
+  bus: { bikes: 'allowed', source: BORDEAUX_METROPOLE, checkedOn: '2026-10-26' },
   ferry: {
     bikes: 'allowed',
     capacity: 6,
