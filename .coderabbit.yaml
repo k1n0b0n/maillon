@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# Advisory review, never a required check: the maintainer's review decides (docs/README.md).
+language: en-US
+tone_instructions: "Be brief and concrete. Report bugs, security issues and broken project rules first. Skip style nits that the linters enforce."
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  in_progress_fortune: false
+  sequence_diagrams: false
+  suggested_labels: false
+  suggested_reviewers: false
+  path_filters:
+    - "!package-lock.json"
+  auto_review:
+    enabled: true
+    drafts: false
+    # The open-source plan allows about one review an hour: one review per pull request, when it is marked ready.
+    auto_incremental_review: false
+    # Planning pull requests are reviewed by the maintainer only.
+    ignore_title_keywords:
+      - "docs:"
+  pre_merge_checks:
+    docstrings:
+      mode: "off"
+    title:
+      mode: "off"
+  finishing_touches:
+    docstrings:
+      enabled: false
+    unit_tests:
+      enabled: false
+  tools:
+    # Flags technical English.
+    languagetool:
+      enabled: false
+
+# The project's rules are read from AGENTS.md and docs/README.md, never restated here.
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "docs/README.md"
+
+chat:
+  auto_reply: true
