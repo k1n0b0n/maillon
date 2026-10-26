@@ -4,10 +4,10 @@
 
 Door-to-door trip planner for Bordeaux that compares walking, cycling, public transport, and public transport with the bike on board (tram outside peak hours, TER, Le Bato; never the bus). Product first: real users, and simplicity is the value. The interface is in French.
 
-Status: M0. The stack is a hypothesis until its ADRs are accepted (`docs/architecture.md`):
+Stack (`docs/architecture.md`):
 
 - Engine: MOTIS 2 in its own container (ADR-0001).
-- App: Astro SSR on Node with Vue 3 islands, TypeScript strict.
+- App: Astro SSR on Node 24 with Vue 3 islands, TypeScript strict (ADR-0002).
 - Data: a nightly pipeline (TBM GTFS, SNCF GTFS, OSM Gironde) that applies the bike rules to `bikes_allowed`.
 - No database, no Redis.
 
@@ -18,7 +18,15 @@ Status: M0. The stack is a hypothesis until its ADRs are accepted (`docs/archite
 
 ## Commands
 
-None yet. Each story adds its commands here; everything runs in Docker and nothing else is needed on the host.
+Everything runs in Docker; nothing else is needed on the host.
+
+| Task | Command |
+|---|---|
+| Start the app (first run installs dependencies) | `docker compose up -d`, then http://localhost:4321 |
+| All quality gates: types, lint, boundaries, unit tests | `docker compose run --rm --no-deps app npm run check` |
+| One test file | `docker compose run --rm --no-deps app npx vitest run src/domain/search.test.ts` |
+| Add a dependency | `docker compose run --rm --no-deps app npm install <package>` |
+| Build and smoke-test the production image | `docker build --target production -t maillon-app -f docker/app/Dockerfile .`, run it, then `sh scripts/smoke.sh http://localhost:4321` |
 
 ## Code rules
 

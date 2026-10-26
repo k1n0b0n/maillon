@@ -2,7 +2,11 @@
 
 Door-to-door trip planner for Bordeaux. It compares walking, cycling, public transport, and public transport with your bike on board: the tram outside peak hours, the TER and Le Bato, never the bus.
 
-> Status: planning. Nothing runs yet; [docs/README.md](docs/README.md) says where the project stands.
+> Status: under construction (M0); [docs/README.md](docs/README.md) says where the project stands.
+
+## Run it
+
+With Docker only: `docker compose up -d`, then open http://localhost:4321. [AGENTS.md](AGENTS.md) lists the other commands.
 
 ## Why
 

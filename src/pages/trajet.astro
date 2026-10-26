@@ -1,0 +1,24 @@
+---
+import SearchForm from '../components/SearchForm.astro';
+import { parseSearch } from '../domain/search.ts';
+import Base from '../layouts/Base.astro';
+
+const parsed = parseSearch(Astro.url.searchParams);
+---
+
+{
+  parsed.complete ? (
+    <Base title={`${parsed.search.from} → ${parsed.search.to}`}>
+      <h1>
+        {parsed.search.from} → {parsed.search.to}
+      </h1>
+      <p>Le calcul des trajets arrive bientôt.</p>
+      <SearchForm values={parsed.search} />
+    </Base>
+  ) : (
+    <Base title="Erreur – Où allez-vous ?">
+      <h1>Où allez-vous ?</h1>
+      <SearchForm values={parsed.values} missing={parsed.missing} />
+    </Base>
+  )
+}

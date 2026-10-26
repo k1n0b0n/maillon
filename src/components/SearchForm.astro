@@ -1,0 +1,67 @@
+---
+import type { SearchField, SearchForm } from '../domain/search.ts';
+
+interface Props {
+  values?: SearchForm;
+  missing?: SearchField[];
+}
+
+const { values = { from: '', to: '' }, missing = [] } = Astro.props;
+
+const fields: { name: SearchField; param: string; label: string; error: string }[] = [
+  { name: 'from', param: 'de', label: 'Départ', error: 'Indiquez un lieu de départ.' },
+  { name: 'to', param: 'a', label: 'Arrivée', error: "Indiquez un lieu d'arrivée." },
+];
+---
+
+<form method="get" action="/trajet">
+  {
+    fields.map(({ name, param, label, error }) => {
+      const invalid = missing.includes(name);
+      return (
+        <p>
+          <label for={param}>{label}</label>
+          <input
+            id={param}
+            name={param}
+            type="text"
+            value={values[name]}
+            required
+            maxlength="200"
+            aria-invalid={invalid ? 'true' : undefined}
+            aria-describedby={invalid ? `${param}-erreur` : undefined}
+          />
+          {invalid && (
+            <span id={`${param}-erreur`} class="error">
+              {error}
+            </span>
+          )}
+        </p>
+      );
+    })
+  }
+  <button type="submit">Comparer les trajets</button>
+</form>
+
+<style>
+  label,
+  input {
+    display: block;
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5rem;
+    font: inherit;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    font: inherit;
+  }
+
+  .error {
+    color: var(--error);
+  }
+</style>
