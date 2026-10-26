@@ -1,0 +1,27 @@
+name: Freshness
+
+# Alerts the maintainer, through GitHub's e-mail on a failed run, when production serves data older than 48 h
+# or has lost its engine (NFR4, E2.2).
+on:
+  schedule:
+    - cron: "7 6 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Production health
+        env:
+          URL: ${{ vars.PRODUCTION_URL }}
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::notice::The PRODUCTION_URL variable is not set yet (E1.2)."
+            exit 0
+          fi
+          health=$(curl -sf --max-time 20 "$URL/health")
+          echo "$health"
+          jq -e '.engine == "up" and .data != null and .data.stale == false' <<< "$health" > /dev/null

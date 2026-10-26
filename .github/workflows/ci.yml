@@ -67,6 +67,7 @@ jobs:
         with:
           persist-credentials: false
       - run: docker build --target production -t maillon-app:ci -f docker/app/Dockerfile .
+      - run: docker compose --profile pipeline build pipeline
       - run: docker run -d --name app -p 4321:4321 maillon-app:ci
       - run: sh scripts/smoke.sh http://localhost:4321
       - if: failure()

@@ -7,6 +7,7 @@ export default defineConfig({
   env: {
     schema: {
       MOTIS_URL: envField.string({ context: 'server', access: 'secret', default: 'http://localhost:8080' }),
+      DATA_DIR: envField.string({ context: 'server', access: 'secret', default: '/data' }),
     },
   },
 });

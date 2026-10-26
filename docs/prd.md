@@ -94,7 +94,7 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 - Given transit + bike, then no option uses a bus, nor a tram trip that overlaps a peak window.
 - Given the folding bike option, then buses are allowed with the bike.
 - Given an option with the bike on the tram, then it says that TBM accepts bikes "if crowding allows".
-- Given an option with the bike on Le Bato, then it says that a crossing takes 10 bikes at most.
+- Given an option with the bike on Le Bato, then it says how many bikes a boat takes, as the bike rules give it.
 
 ### E4.4 When
 
