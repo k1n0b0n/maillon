@@ -8,4 +8,4 @@ docker compose run --build --rm -v "$PWD/golden/dataset:/dataset:ro" -e PIPELINE
   -e TBM_GTFS_URL=file:///dataset/tbm -e SNCF_GTFS_URL=file:///dataset/sncf -e OSM_URL=file:///dataset/area.osm.pbf \
   pipeline
 docker compose up -d --force-recreate motis
-docker compose run --rm --no-deps app sh -c '[ -d node_modules/.bin ] || npm ci; npm run golden'
+docker compose run --rm --no-deps app npm run golden
