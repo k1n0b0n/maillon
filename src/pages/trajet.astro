@@ -2,9 +2,10 @@
 import { MOTIS_URL } from 'astro:env/server';
 import { findPlace } from '../adapters/motis/geocode.ts';
 import { compare } from '../adapters/motis/plan.ts';
-import ItineraryText from '../components/ItineraryText.astro';
+import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
-import { earliestArrival, type Itinerary, type Place } from '../domain/itinerary.ts';
+import { type Card, cards } from '../domain/comparison.ts';
+import type { Place } from '../domain/itinerary.ts';
 import { parseSearch } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
 
@@ -12,8 +13,7 @@ type Outcome =
   | { kind: 'missing' }
   | { kind: 'unknown'; texts: string[] }
   | { kind: 'down' }
-  | { kind: 'none'; from: Place; to: Place }
-  | { kind: 'found'; from: Place; to: Place; itinerary: Itinerary };
+  | { kind: 'found'; from: Place; to: Place; cards: Card[] };
 
 const parsed = parseSearch(Astro.url.searchParams);
 const values = parsed.complete ? parsed.search : parsed.values;
@@ -30,8 +30,7 @@ async function search(texts: { from: string; to: string }): Promise<Outcome> {
     arriveBy: false,
     folding: false,
   });
-  const itinerary = earliestArrival(comparison.transit);
-  return itinerary ? { kind: 'found', from, to, itinerary } : { kind: 'none', from, to };
+  return { kind: 'found', from, to, cards: cards(comparison) };
 }
 
 let outcome: Outcome;
@@ -48,7 +47,7 @@ if (!parsed.complete) {
 }
 
 const title =
-  outcome.kind === 'found' || outcome.kind === 'none'
+  outcome.kind === 'found'
     ? `${outcome.from.name} → ${outcome.to.name}`
     : outcome.kind === 'missing'
       ? 'Erreur – Où allez-vous ?'
@@ -62,19 +61,12 @@ const title =
         <h1>
           {outcome.from.name} → {outcome.to.name}
         </h1>
-        <h2>En transports en commun</h2>
-        <ItineraryText itinerary={outcome.itinerary} origin={outcome.from.name} destination={outcome.to.name} />
-        <h2>Modifier la recherche</h2>
-      </>
-    )
-  }
-  {
-    outcome.kind === 'none' && (
-      <>
-        <h1>
-          {outcome.from.name} → {outcome.to.name}
-        </h1>
-        <p role="status">Aucun trajet en transports en commun ne part dans les prochaines heures.</p>
+        <p>Départ maintenant. Les options sont classées par heure d’arrivée.</p>
+        <ol class="cards">
+          {outcome.cards.map((card) => (
+            <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} />
+          ))}
+        </ol>
         <h2>Modifier la recherche</h2>
       </>
     )
@@ -101,3 +93,10 @@ const title =
   {outcome.kind === 'missing' && <h1>Où allez-vous ?</h1>}
   <SearchForm values={values} missing={parsed.complete ? [] : parsed.missing} />
 </Base>
+
+<style>
+  .cards {
+    padding: 0;
+    list-style: none;
+  }
+</style>
