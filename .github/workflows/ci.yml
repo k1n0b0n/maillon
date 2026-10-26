@@ -53,7 +53,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Types, lint, boundaries, unit tests
-        run: docker compose run --rm --no-deps app sh -c 'npm ci && npm run check'
+        run: docker compose run --rm --no-deps app npm run check
       - name: Audit the production dependencies
         run: docker compose run --rm --no-deps app npm audit --omit=dev --audit-level=high
 

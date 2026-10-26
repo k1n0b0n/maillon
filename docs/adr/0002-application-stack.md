@@ -25,6 +25,6 @@ The product is a form and its results: pages that must work without JavaScript, 
 
 ## Consequences
 
-- Easier: RGAA and RGESN come almost free (server HTML, no JS by default); shareable URLs; the domain is portable.
+- Easier: server HTML with no JavaScript by default makes the RGAA and RGESN work smaller, not optional (ADR-0003); shareable URLs; the domain is portable.
 - Harder: state shared between islands is awkward. If interactivity grows past a few islands, the way out is Nuxt: the domain is plain TypeScript and the islands are already Vue.
 - The production image weighs 428 MB, mostly `node_modules`; bundling the server is an option if it matters.
