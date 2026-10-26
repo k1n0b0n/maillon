@@ -4,7 +4,9 @@ ENV ASTRO_TELEMETRY_DISABLED=1 NPM_CONFIG_UPDATE_NOTIFIER=false
 
 # compose.yaml mounts the source, and node_modules in its own volume.
 FROM base AS dev
-CMD ["sh", "-c", "[ -d node_modules/.bin ] || npm ci; exec npm run dev"]
+COPY docker/app/dev-entrypoint.sh /usr/local/bin/dev-entrypoint
+ENTRYPOINT ["dev-entrypoint"]
+CMD ["npm", "run", "dev"]
 
 FROM base AS build
 COPY package.json package-lock.json ./
