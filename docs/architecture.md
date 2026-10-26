@@ -1,6 +1,6 @@
 # Architecture
 
-> Status: target before the founding ADRs. Each part names the ADR that confirms or changes it.
+> Status: target, confirmed ADR by ADR. Each part names the ADR that confirms or changes it.
 
 ## Overview
 
@@ -8,9 +8,9 @@
 browser ── GET /trajet?de=…&a=…&quand=…&velo=… ──► app (Astro SSR, Node)
                                                   ├─ domain/             comparison, bike profiles, ranking (plain TypeScript)
                                                   ├─ adapters/motis    ──► motis (container)
-                                                  ├─ adapters/geocoder ──► BAN (Géoplateforme) or the engine's own
+                                                  ├─ adapters/geocoder ──► motis (ADR-0001)
                                                   └─ in-memory LRU cache (~60 s)
-pipeline (nightly job): TBM GTFS + TER GTFS + OSM Gironde → validation → bike rules applied to bikes_allowed
+pipeline (nightly job): TBM GTFS + SNCF GTFS + OSM Gironde → validation → bike rules applied to bikes_allowed
                         → engine import → atomic switch → smoke test
 ```
 
@@ -25,7 +25,7 @@ Numbered in the order they are written.
 
 | Decision | Hypothesis | Story |
 |---|---|---|
-| Routing engine | MOTIS 2; OpenTripPlanner 2 only if MOTIS fails a criterion | E2.1 |
+| Routing engine | [ADR-0001](adr/0001-routing-engine.md), accepted: MOTIS 2, its geocoder too | E2.1 |
 | Application stack | Astro SSR with Vue 3 islands, TypeScript strict; Nuxt is the way out if interactivity grows | E1.1 |
 | Responsible design | Budgets from the first page, a manual audit per milestone, "partially compliant" statements | E1.1 |
 | Hosting and delivery | balise's final state: GHCR images, SSH deploy with a forced command, the host's nginx, release-please | E1.2 |
@@ -38,4 +38,4 @@ Numbered in the order they are written.
 | 2026-10-26 | No database or Redis in the MVP; favourites, later, in the browser's storage | Nothing to keep on the server |
 | 2026-10-26 | The search state lives in the URL | Shareable links, a reliable back button, pages that work without JavaScript |
 | 2026-10-26 | Renovate keeps dependencies and images current | balise's own version tooling took three stories |
-| 2026-10-26 | Code under MIT; data credited on every page | Licence Ouverte (TBM), ODbL (OSM), SNCF terms |
+| 2026-10-26 | Code under MIT; data credited on every page | Licence Ouverte (TBM), ODbL (OSM, SNCF) |

@@ -21,10 +21,10 @@ Progress lives in the stories and in *Current state*, never in the PRD.
 
 1. **Draft.** Copy `stories/_template.md` for a PRD story and list the golden routes and budgets it touches.
 2. **Build** on a branch, tests first for the domain.
-3. **Review.** Open the pull request as a draft. Once the gates are green, the maintainer reviews it and marks it ready, which starts the AI review once; fix the valid findings. Ask the bot for another review only when the maintainer says so.
+3. **Review.** Open the pull request ready for review, always: the AI review runs once on its own, on code only. Once the gates are green, the maintainer reviews it; fix the valid findings. Ask the bot for another review only when the maintainer says so.
 4. **Close in the same pull request:** notes, measure, status *Done*, *Current state*. A check that can only run after the merge is a follow-up in *Current state*; its result goes to the maintainer, not into another pull request.
 
-One story is one pull request. A `docs:` pull request is only for planning without code (PRD, ADR, retro): one per session, opened ready, reviewed by the maintainer only.
+One story is one pull request. A `docs:` pull request is only for planning without code (PRD, ADR, retro), one per session; the AI review skips it.
 
 ## Done means
 
@@ -34,6 +34,7 @@ One story is one pull request. A `docs:` pull request is only for planning witho
 
 ## Rules
 
+- Keep every document as simple as possible without losing important information.
 - Scope lives in `prd.md`. Anything else becomes an `idea` issue, never code in the current story.
 - An ADR comes before the code for any decision costly to reverse.
 - A route reported wrong becomes a failing golden route before its fix.
@@ -54,18 +55,20 @@ Each skill runs the steps of this file and restates none of its rules: `story` o
 
 ## Changing the method
 
-A process rule changes only at a retro, as an experiment with a hypothesis, a measure and a review date. A real blocker is the only exception, logged the same way.
+A process rule changes at a retro, as an experiment with a hypothesis, a measure and a review date, or when the maintainer decides. Every change is logged below.
 
 | Date | Change | Why | Verdict |
 |---|---|---|---|
 | 2026-10-26 | v2 of balise's BMAD-lite: capped artefacts, rules in this file only, ideas as issues, a retro per milestone | balise: 41 % of commits were `docs`, its rules were copied in 5 places and changed 4 times in 6 days | M1 retro |
+| 2026-10-26 | Every pull request opens ready for review | Maintainer's decision after story 001: the draft added a step and protected nothing | M1 retro |
+| 2026-10-26 | Documents as simple as possible without losing important information | Maintainer's decision | M1 retro |
 
 ## Current state
 
 Replaced at the end of every session. Five items, 12 lines at most.
 
-- **Milestone:** M0, 0 of 6 stories done.
-- **Current story:** none.
+- **Milestone:** M0, 1 of 6 stories done.
+- **Current story:** 001, E2.1 engine spike: MOTIS 2 (ADR-0001), in review.
 - **Follow-ups after merge:** none.
-- **Next:** E2.1 engine spike (story 001), then E1.1 skeleton and gates, then E1.2 delivery.
+- **Next:** E1.1 skeleton and gates, then E1.2 delivery (the search p95 on the server), then E2.2 nightly data.
 - **Blockers:** none.

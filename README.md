@@ -18,7 +18,7 @@ In Bordeaux you can take your bike on the tram outside peak hours, on the TER an
 ## Data
 
 - TBM timetables, [Licence Ouverte](https://www.etalab.gouv.fr/licence-ouverte-open-licence/)
-- TER Nouvelle-Aquitaine timetables, SNCF
+- SNCF timetables, ODbL
 - © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, ODbL
 
 ## License
