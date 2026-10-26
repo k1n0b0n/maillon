@@ -17,6 +17,7 @@
 
 - The boundary failed CI on purpose: a domain file importing the MOTIS adapter (see the pull request's checks).
 - `astro:env` modules are virtual: dependency-cruiser ignores `astro:*`, and tests may import Vitest from the domain.
+- CodeRabbit skips a pull request whose base is not `main`: `base_branches` now lets it review stacked ones.
 - The `ci` and `pr-title` checks become required in the `main` ruleset once this story is merged; Renovate needs its GitHub App on the repository.
 
 **Measure:** home page 2,052 bytes of HTML and no JavaScript; production image 428 MB.
