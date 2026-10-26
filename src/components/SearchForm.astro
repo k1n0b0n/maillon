@@ -1,5 +1,6 @@
 ---
 import type { SearchField, SearchForm } from '../domain/search.ts';
+import PlaceInput from './PlaceInput.vue';
 
 interface Props {
   values?: SearchForm;
@@ -7,39 +8,29 @@ interface Props {
 }
 
 const { values = { from: '', to: '', folding: false }, missing = [] } = Astro.props;
-
-const fields: { name: SearchField; param: string; label: string; error: string }[] = [
-  { name: 'from', param: 'de', label: 'Départ', error: 'Indiquez un lieu de départ.' },
-  { name: 'to', param: 'a', label: 'Arrivée', error: "Indiquez un lieu d'arrivée." },
-];
+const at = (coordinates: SearchForm['fromAt']) => coordinates && `${coordinates.lat},${coordinates.lon}`;
 ---
 
 <form method="get" action="/trajet">
-  {
-    fields.map(({ name, param, label, error }) => {
-      const invalid = missing.includes(name);
-      return (
-        <p>
-          <label for={param}>{label}</label>
-          <input
-            id={param}
-            name={param}
-            type="text"
-            value={values[name]}
-            required
-            maxlength="200"
-            aria-invalid={invalid ? 'true' : undefined}
-            aria-describedby={invalid ? `${param}-erreur` : undefined}
-          />
-          {invalid && (
-            <span id={`${param}-erreur`} class="error">
-              {error}
-            </span>
-          )}
-        </p>
-      );
-    })
-  }
+  <PlaceInput
+    client:load
+    name="de"
+    coordinatesName="dep"
+    label="Départ"
+    value={values.from}
+    coordinates={at(values.fromAt)}
+    error={missing.includes('from') ? 'Indiquez un lieu de départ.' : undefined}
+    locate
+  />
+  <PlaceInput
+    client:load
+    name="a"
+    coordinatesName="arr"
+    label="Arrivée"
+    value={values.to}
+    coordinates={at(values.toAt)}
+    error={missing.includes('to') ? 'Indiquez un lieu d’arrivée.' : undefined}
+  />
   <p class="option">
     <input id="velo" name="velo" type="checkbox" value="pliant" checked={values.folding} />
     <label for="velo">J’ai un vélo pliant</label>
@@ -48,29 +39,8 @@ const fields: { name: SearchField; param: string; label: string; error: string }
 </form>
 
 <style>
-  label,
-  input {
-    display: block;
-  }
-
-  .option > * {
-    display: inline;
-    width: auto;
-  }
-
-  input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 0.5rem;
-    font: inherit;
-  }
-
   button {
     padding: 0.5rem 1rem;
     font: inherit;
-  }
-
-  .error {
-    color: var(--error);
   }
 </style>

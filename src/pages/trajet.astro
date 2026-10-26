@@ -1,27 +1,38 @@
 ---
 import { MOTIS_URL } from 'astro:env/server';
 import { findPlace } from '../adapters/motis/geocode.ts';
+import { isInsideArea } from '../domain/area.ts';
 import { compare } from '../adapters/motis/plan.ts';
 import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
 import { type Card, cards } from '../domain/comparison.ts';
 import type { Place } from '../domain/itinerary.ts';
-import { parseSearch } from '../domain/search.ts';
+import { parseSearch, type SearchForm as Search } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
 
 type Outcome =
   | { kind: 'missing' }
   | { kind: 'unknown'; texts: string[] }
+  | { kind: 'outside'; names: string[] }
   | { kind: 'down' }
   | { kind: 'found'; from: Place; to: Place; cards: Card[] };
 
 const parsed = parseSearch(Astro.url.searchParams);
 const values = parsed.complete ? parsed.search : parsed.values;
 
-async function search(texts: { from: string; to: string; folding: boolean }): Promise<Outcome> {
-  const [from, to] = await Promise.all([findPlace(MOTIS_URL, texts.from), findPlace(MOTIS_URL, texts.to)]);
+/** A chosen suggestion or position comes with its coordinates; a typed name goes to the geocoder (E4.1). */
+async function place(name: string, coordinates: Search['fromAt']): Promise<Place | undefined> {
+  return coordinates ? { name, coordinates } : findPlace(MOTIS_URL, name);
+}
+
+async function search(texts: Search): Promise<Outcome> {
+  const [from, to] = await Promise.all([place(texts.from, texts.fromAt), place(texts.to, texts.toAt)]);
   if (from === undefined || to === undefined) {
     return { kind: 'unknown', texts: [from ? undefined : texts.from, to ? undefined : texts.to].filter((text) => text !== undefined) };
+  }
+  const outside = [from, to].filter(({ coordinates }) => !isInsideArea(coordinates)).map(({ name }) => name);
+  if (outside.length > 0) {
+    return { kind: 'outside', names: outside };
   }
   const comparison = await compare(MOTIS_URL, {
     from: from.coordinates,
@@ -87,6 +98,16 @@ const title =
       <>
         <h1>Calcul indisponible</h1>
         <p role="alert">Le calcul d’itinéraire ne répond pas pour le moment. Réessayez dans une minute.</p>
+      </>
+    )
+  }
+  {
+    outcome.kind === 'outside' && (
+      <>
+        <h1>Hors de la zone couverte</h1>
+        <p role="alert">
+          {outcome.names.map((name) => `« ${name} »`).join(' et ')} : maillon ne couvre que la Gironde pour l’instant.
+        </p>
       </>
     )
   }

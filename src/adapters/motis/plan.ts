@@ -1,4 +1,5 @@
-import type { Comparison, Itinerary, Leg, Mode, PlanQuery } from '../../domain/itinerary.ts';
+import type { Comparison, Itinerary, Leg, PlanQuery } from '../../domain/itinerary.ts';
+import { MODES } from './modes.ts';
 
 interface MotisPlace {
   name: string;
@@ -25,22 +26,6 @@ interface MotisPlan {
   direct: MotisItinerary[];
   itineraries: MotisItinerary[];
 }
-
-const MODES: Record<string, Mode> = {
-  WALK: 'walk',
-  BIKE: 'bike',
-  TRAM: 'tram',
-  BUS: 'bus',
-  FERRY: 'ferry',
-  COACH: 'coach',
-  RAIL: 'train',
-  REGIONAL_RAIL: 'train',
-  REGIONAL_FAST_RAIL: 'train',
-  SUBURBAN: 'train',
-  HIGHSPEED_RAIL: 'train',
-  LONG_DISTANCE: 'train',
-  NIGHT_RAIL: 'train',
-};
 
 /** The engine names the search's two ends; the page knows them better. */
 const ENDS = new Set(['START', 'END']);
