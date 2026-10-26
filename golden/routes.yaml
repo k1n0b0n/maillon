@@ -48,3 +48,13 @@
   expect:
     some: train
     never: [bus]
+
+- id: GR6
+  title: Mérignac Centre → Talence Thouars with a folding bike, which rides the bus
+  from: 44.84290,-0.64560
+  to: 44.79900,-0.58800
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  folding: true
+  expect:
+    some: bus

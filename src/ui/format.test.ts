@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Itinerary, Leg } from '../domain/itinerary.ts';
-import { changes, clock, distance, duration, step } from './format.ts';
+import { BIKE_RULES } from '../domain/bike-rules.ts';
+import { bikeNote, changes, clock, distance, duration, step } from './format.ts';
 
 const at = (time: string) => new Date(`2026-10-27T${time}:00+01:00`);
 
@@ -35,5 +36,10 @@ describe('format', () => {
     expect(step(toStop, 'Ma rue', 'Bourse')).toBe('À vélo jusqu’à Gare Saint-Jean : 1 min, 20 m.');
     expect(step(ride, 'Ma rue', 'Bourse')).toBe('Tram F direction Mérignac Aéroport, de Gare Saint-Jean à 10 h 31 jusqu’à Tauzia à 10 h 32.');
     expect(step(home, 'Ma rue', 'Bourse')).toBe('À pied jusqu’à Bourse : 9 min.');
+  });
+
+  it('turns the bike rules into what a rider must know', () => {
+    expect(bikeNote('ferry', BIKE_RULES.ferry)).toBe('Bato : 6 vélos au plus par bateau.');
+    expect(bikeNote('tram', BIKE_RULES.tram)).toBe('Tram : vélo accepté hors heures de pointe, si l’affluence le permet.');
   });
 });

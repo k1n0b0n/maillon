@@ -6,7 +6,7 @@ interface Props {
   missing?: SearchField[];
 }
 
-const { values = { from: '', to: '' }, missing = [] } = Astro.props;
+const { values = { from: '', to: '', folding: false }, missing = [] } = Astro.props;
 
 const fields: { name: SearchField; param: string; label: string; error: string }[] = [
   { name: 'from', param: 'de', label: 'Départ', error: 'Indiquez un lieu de départ.' },
@@ -40,6 +40,10 @@ const fields: { name: SearchField; param: string; label: string; error: string }
       );
     })
   }
+  <p class="option">
+    <input id="velo" name="velo" type="checkbox" value="pliant" checked={values.folding} />
+    <label for="velo">J’ai un vélo pliant</label>
+  </p>
   <button type="submit">Comparer les trajets</button>
 </form>
 
@@ -47,6 +51,11 @@ const fields: { name: SearchField; param: string; label: string; error: string }
   label,
   input {
     display: block;
+  }
+
+  .option > * {
+    display: inline;
+    width: auto;
   }
 
   input {

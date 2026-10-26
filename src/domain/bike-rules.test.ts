@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { BIKE_RULES, takesBikes } from './bike-rules.ts';
+import { BIKE_RULES, rulesMet, takesBikes } from './bike-rules.ts';
+import type { Itinerary, Leg } from './itinerary.ts';
 
 const at = (first: string, last: string) => {
   const minutes = (time: string) => {
@@ -44,5 +45,19 @@ describe('takesBikes', () => {
       expect(rule.source).toMatch(/^https:\/\//);
       expect(rule.checkedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
+  });
+});
+
+describe('rulesMet', () => {
+  it('lists the rules of the vehicles an itinerary rides, once each', () => {
+    const leg = (mode: Leg['mode']): Leg => ({ mode, from: 'a', to: 'b', departure: new Date(0), arrival: new Date(0) });
+    const itinerary: Itinerary = {
+      departure: new Date(0),
+      arrival: new Date(0),
+      legs: [leg('bike'), leg('ferry'), leg('bike'), leg('tram'), leg('tram'), leg('bike')],
+    };
+
+    expect(rulesMet(itinerary).map(({ vehicle }) => vehicle)).toEqual(['ferry', 'tram']);
+    expect(rulesMet(itinerary)[0]?.rule.capacity).toBe(6);
   });
 });
