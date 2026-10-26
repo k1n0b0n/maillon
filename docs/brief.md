@@ -37,7 +37,7 @@ Accounts, anything stored on a server for a person, bike sharing (V³), bike par
 
 - TBM GTFS: valid from 2026-10-24 to 2027-01-22, updated daily. `bikes_allowed` is 0 for all 15,210 tram trips and 51,768 bus trips, and 1 for the 1,556 Bato trips (lines 951 to 953).
 - TBM rules: no bikes on the tram from 7 to 9 am and from 4 to 7 pm (sources disagree on the evening), allowed otherwise "if crowding allows"; no bikes on buses unless folded; 10 bikes per Bato crossing.
-- The TBM feed has no trains: the TER Nouvelle-Aquitaine GTFS is needed, and the TER bike rules are still to check.
+- The TBM feed has no trains: the SNCF GTFS (ODbL) is needed. It has no `bikes_allowed` column at all, and the TER bike rules are still to check.
 
 ## Success criteria
 

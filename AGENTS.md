@@ -4,11 +4,11 @@
 
 Door-to-door trip planner for Bordeaux that compares walking, cycling, public transport, and public transport with the bike on board (tram outside peak hours, TER, Le Bato; never the bus). Product first: real users, and simplicity is the value. The interface is in French.
 
-Status: planning. The stack is a hypothesis until its ADRs are accepted in M0 (`docs/architecture.md`):
+Status: M0. The stack is a hypothesis until its ADRs are accepted (`docs/architecture.md`):
 
-- Engine: MOTIS 2 in its own container.
+- Engine: MOTIS 2 in its own container (ADR-0001).
 - App: Astro SSR on Node with Vue 3 islands, TypeScript strict.
-- Data: a nightly pipeline (TBM GTFS, TER GTFS, OSM Gironde) that applies the bike rules to `bikes_allowed`.
+- Data: a nightly pipeline (TBM GTFS, SNCF GTFS, OSM Gironde) that applies the bike rules to `bikes_allowed`.
 - No database, no Redis.
 
 ## Start of a session
@@ -37,4 +37,4 @@ Never write the production server's name, address, port, users or paths, nor the
 
 ## Data
 
-TBM timetables (Licence Ouverte), TER Nouvelle-Aquitaine timetables (SNCF), OpenStreetMap (ODbL). The facts that shape the product are in `docs/brief.md`.
+TBM timetables (Licence Ouverte), SNCF timetables (ODbL), OpenStreetMap (ODbL). The facts that shape the product are in `docs/brief.md`.

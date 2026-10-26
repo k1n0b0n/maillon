@@ -19,15 +19,15 @@ The three simplicity measures of the brief: at most 3 interactions to the first 
 
 ## Golden routes
 
-A golden route is a search (from, to, date and time, profile) with **expected properties**, never exact minutes. CI runs them on a frozen dataset. There are 5 at the end of M0 and 10 at the end of M1; each story lists the ones it adds. The stops of GR1 and GR4 are chosen in E2.1.
+A golden route is a search (from, to, date and time, profile) with **expected properties**, never exact minutes. CI runs them on a frozen dataset. There are 5 at the end of M0 and 10 at the end of M1; each story lists the ones it adds.
 
 | Id | Search | Profile | Expected |
 |---|---|---|---|
-| GR1 | A route where a bus would be the fastest | Transit + bike | No bus leg |
+| GR1 | Mérignac Centre → Talence Thouars, a Tuesday at 10:30, where a bus is the fastest | Transit + bike | No bus leg |
 | GR2 | Gare Saint-Jean → Place de la Bourse, a Tuesday at 8:00 | Transit + bike | No tram leg (peak hour) |
 | GR3 | The same at 10:30 | Transit + bike | A tram leg is proposed |
-| GR4 | Between two Bato piers on opposite banks, far from a bridge | Transit + bike | Le Bato is proposed |
-| GR5 | Pessac → Gare Saint-Jean | Transit + bike | A TER leg is proposed |
+| GR4 | Lormont Bas → La Cité du Vin, a Tuesday at 10:30 | Transit + bike | Le Bato is proposed |
+| GR5 | Pessac → Gare Saint-Jean, a Tuesday at 10:30 | Transit + bike | A TER leg is proposed |
 
 ## M0: skeleton online
 

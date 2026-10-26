@@ -64,8 +64,8 @@ A process rule changes only at a retro, as an experiment with a hypothesis, a me
 
 Replaced at the end of every session. Five items, 12 lines at most.
 
-- **Milestone:** M0, 0 of 6 stories done.
-- **Current story:** none.
+- **Milestone:** M0, 1 of 6 stories done.
+- **Current story:** 001, E2.1 engine spike: MOTIS 2 (ADR-0001), in review.
 - **Follow-ups after merge:** none.
-- **Next:** E2.1 engine spike (story 001), then E1.1 skeleton and gates, then E1.2 delivery.
+- **Next:** E1.1 skeleton and gates, then E1.2 delivery (the search p95 on the server), then E2.2 nightly data.
 - **Blockers:** none.
