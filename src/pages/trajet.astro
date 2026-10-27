@@ -6,6 +6,7 @@ import Icon from '../components/Icon.astro';
 import ItineraryMap from '../components/ItineraryMap.vue';
 import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
+import ShowOnMap from '../components/ShowOnMap.vue';
 import { isInsideArea } from '../domain/area.ts';
 import { type Card, cards, optionsFor } from '../domain/comparison.ts';
 import type { Place } from '../domain/itinerary.ts';
@@ -87,6 +88,11 @@ const reverseQuery =
       }).toString()
     : '';
 
+// `cards()` sorts the options found first, by arrival: the best one is the first, if any.
+const best = outcome.kind === 'found' && outcome.cards[0]?.itinerary ? outcome.cards[0] : undefined;
+const others = outcome.kind === 'found' ? outcome.cards.filter((card) => card !== best) : [];
+const mapOptions = outcome.kind === 'found' ? outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.bike) })) : [];
+
 const title =
   outcome.kind === 'found'
     ? `${outcome.from.name} → ${outcome.to.name}`
@@ -109,23 +115,25 @@ const title =
             Inverser le trajet
           </a>
         </div>
-        <ol class="cards">
-          {outcome.cards.map((card, index) => (
-            <OptionCard
-              card={card}
-              origin={outcome.from.name}
-              destination={outcome.to.name}
-              bike={values.bike}
-              first={index === 0}
-            />
-          ))}
-        </ol>
-        {outcome.cards.some(({ itinerary }) => itinerary) && (
-          <ItineraryMap
-            client:load
-            query={mapQuery}
-            options={outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.bike) }))}
-          />
+        {best && (
+          <section aria-labelledby="meilleure">
+            <h2 id="meilleure">Meilleure option</h2>
+            <OptionCard card={best} origin={outcome.from.name} destination={outcome.to.name} bike={values.bike} best>
+              <ItineraryMap slot="map" client:load query={mapQuery} options={mapOptions} initial={best.kind} />
+            </OptionCard>
+          </section>
+        )}
+        {others.length > 0 && (
+          <section aria-labelledby="autres">
+            <h2 id="autres">{best ? 'Autres options' : 'Aucun trajet trouvé'}</h2>
+            <ol class="cards">
+              {others.map((card) => (
+                <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} bike={values.bike}>
+                  {card.itinerary && <ShowOnMap slot="map" client:load kind={card.kind} name={optionName(card.kind, values.bike)} />}
+                </OptionCard>
+              ))}
+            </ol>
+          </section>
         )}
         <h2>Modifier la recherche</h2>
       </>
@@ -178,8 +186,13 @@ const title =
     font-weight: 600;
   }
 
+  section h2 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1.25rem;
+  }
+
   .cards {
-    margin: 0.5rem 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
   }

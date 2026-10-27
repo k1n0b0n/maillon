@@ -11,8 +11,8 @@ interface Props {
   origin: string;
   destination: string;
   bike: Bike;
-  /** The first option found, which the list sorts by arrival. */
-  first: boolean;
+  /** The option that arrives first: on its own, its steps open, the map under it. */
+  best?: boolean;
 }
 
 const STEPS: Record<CardKind, string> = {
@@ -29,7 +29,8 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination, bike, first } = Astro.props;
+const { card, origin, destination, bike, best = false } = Astro.props;
+const Root = best ? 'div' : 'li';
 const { kind, itinerary } = card;
 const transit = kind === 'transit' || kind === 'transitBike';
 const name = optionName(kind, bike);
@@ -41,15 +42,15 @@ const notes =
     : [];
 ---
 
-<li class:list={['card', { empty: itinerary === undefined }]}>
-  <h2>
+<Root class:list={['card', { best, empty: itinerary === undefined }]}>
+  <h3>
     <span class="modes">{cardModes(card).map((mode) => <Icon name={mode} />)}</span>
     {name}
-  </h2>
+  </h3>
   {
     itinerary ? (
       <>
-        {first && <p class="first">Arrive en premier</p>}
+        {best && <p class="first">Arrive en premier</p>}
         <p class="arrival">
           Arrivée <time datetime={itinerary.arrival.toISOString()}>{clock(itinerary.arrival)}</time>
         </p>
@@ -65,7 +66,8 @@ const notes =
             ))}
           </ul>
         )}
-        <details>
+        <slot name="map" />
+        <details open={best}>
           <summary>{STEPS[kind]}</summary>
           <ol class="steps">
             {itinerary.legs.map((leg) => {
@@ -91,7 +93,7 @@ const notes =
       <p class="missing">{MISSING[kind]}</p>
     )
   }
-</li>
+</Root>
 
 <style>
   .card {
@@ -102,12 +104,16 @@ const notes =
     border-radius: var(--radius);
   }
 
+  .card.best {
+    border: 2px solid var(--accent);
+  }
+
   .card.empty {
     background: transparent;
     border: 2px dashed var(--border);
   }
 
-  h2 {
+  h3 {
     display: flex;
     gap: 0.5rem;
     align-items: center;

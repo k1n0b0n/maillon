@@ -11,7 +11,7 @@ ADR-0005 loads the map only when the person presses "Afficher la carte". On the 
 
 - **The map loads with the results**: the map's island loads MapLibre once it is hydrated, then draws the best option. It still waits for a press when the browser asks to save data (`navigator.connection.saveData`, or `prefers-reduced-data: reduce`).
 - **MapLibre GL JS 6 and OpenFreeMap stay** as ADR-0005 set them: same library, worker, style and attribution.
-- **Measured**: story 012 records the weight actually transferred with the map loaded, library and tiles of one screen included. NFR2's budgets still exclude the map.
+- **Measured** (story 012): a first search at 360 px transfers about 990 kB with the map, 443 kB of it from the app (MapLibre) and 544 kB from OpenFreeMap (tiles, glyphs, sprite). NFR2's budgets still exclude the map.
 
 This replaces ADR-0005's "on request" and amends ADR-0003's default.
 
