@@ -55,6 +55,16 @@
   to: 44.79900,-0.58800
   at: 2026-10-27T10:30:00+01:00
   option: transitBike
-  folding: true
+  bike: folding
   expect:
     some: bus
+
+- id: GR7
+  title: Gare Saint-Jean → Place de la Bourse at 10:30, without a bike
+  from: 44.82577,-0.55681
+  to: 44.84140,-0.57074
+  at: 2026-10-27T10:30:00+01:00
+  option: transit
+  bike: none
+  expect:
+    never: [bike]

@@ -79,16 +79,19 @@ async function request(baseUrl: string, query: PlanQuery, params: Record<string,
   }
 }
 
-/** Two requests: walk, bike and transit together, then transit with the bike on board (ADR-0001). */
+/** Two requests: walk, bike and transit together, then transit with the bike on board (ADR-0001); without a bike, the first on foot only. */
 export async function compare(baseUrl: string, query: PlanQuery): Promise<Comparison> {
+  const hasBike = query.bike !== 'none';
   const [plain, withBike] = await Promise.all([
-    request(baseUrl, query, { directModes: 'WALK,BIKE', maxDirectTime: String(MAX_DIRECT_SECONDS) }),
-    request(baseUrl, query, {
-      directModes: '',
-      preTransitModes: 'BIKE',
-      postTransitModes: 'BIKE',
-      ...(query.folding ? {} : { requireBikeTransport: 'true' }),
-    }),
+    request(baseUrl, query, { directModes: hasBike ? 'WALK,BIKE' : 'WALK', maxDirectTime: String(MAX_DIRECT_SECONDS) }),
+    hasBike
+      ? request(baseUrl, query, {
+          directModes: '',
+          preTransitModes: 'BIKE',
+          postTransitModes: 'BIKE',
+          ...(query.bike === 'folding' ? {} : { requireBikeTransport: 'true' }),
+        })
+      : undefined,
   ]);
   const direct = (mode: string) => plain.direct.find((motis) => motis.legs[0]?.mode === mode);
   const walk = direct('WALK');
@@ -97,6 +100,6 @@ export async function compare(baseUrl: string, query: PlanQuery): Promise<Compar
     ...(walk ? { walk: itinerary(walk) } : {}),
     ...(bike ? { bike: itinerary(bike) } : {}),
     transit: plain.itineraries.map(itinerary),
-    transitBike: withBike.itineraries.map(itinerary),
+    transitBike: withBike?.itineraries.map(itinerary) ?? [],
   };
 }

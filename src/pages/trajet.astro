@@ -7,9 +7,9 @@ import ItineraryMap from '../components/ItineraryMap.vue';
 import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
 import { isInsideArea } from '../domain/area.ts';
-import { type Card, cards } from '../domain/comparison.ts';
+import { type Card, cards, optionsFor } from '../domain/comparison.ts';
 import type { Place } from '../domain/itinerary.ts';
-import { parseSearch, type SearchForm as Search } from '../domain/search.ts';
+import { BIKE_PARAMS, parseSearch, type SearchForm as Search } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
 import { optionName } from '../ui/options.ts';
 
@@ -44,9 +44,9 @@ async function search(texts: Search): Promise<Outcome> {
     to: to.coordinates,
     time,
     arriveBy: false,
-    folding: texts.folding,
+    bike: texts.bike,
   });
-  return { kind: 'found', from, to, cards: cards(comparison), time };
+  return { kind: 'found', from, to, cards: cards(comparison, optionsFor(texts.bike)), time };
 }
 
 let outcome: Outcome;
@@ -71,10 +71,10 @@ const mapQuery =
         a: outcome.to.name,
         arr: at(outcome.to.coordinates),
         quand: outcome.time.toISOString(),
-        ...(values.folding ? { velo: 'pliant' } : {}),
+        velo: BIKE_PARAMS[values.bike],
       }).toString()
     : '';
-// The way back keeps the time asked, if any, and the folding bike.
+// The way back keeps the time asked, if any, and the bike.
 const reverseQuery =
   outcome.kind === 'found'
     ? new URLSearchParams({
@@ -83,7 +83,7 @@ const reverseQuery =
         a: outcome.from.name,
         arr: at(outcome.from.coordinates),
         ...(values.at ? { quand: values.at.toISOString() } : {}),
-        ...(values.folding ? { velo: 'pliant' } : {}),
+        velo: BIKE_PARAMS[values.bike],
       }).toString()
     : '';
 
@@ -115,7 +115,7 @@ const title =
               card={card}
               origin={outcome.from.name}
               destination={outcome.to.name}
-              folding={values.folding}
+              bike={values.bike}
               first={index === 0}
             />
           ))}
@@ -124,7 +124,7 @@ const title =
           <ItineraryMap
             client:load
             query={mapQuery}
-            options={outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.folding) }))}
+            options={outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.bike) }))}
           />
         )}
         <h2>Modifier la recherche</h2>

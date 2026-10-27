@@ -1,5 +1,5 @@
 import { parseCoordinates } from './area.ts';
-import type { Coordinates } from './itinerary.ts';
+import type { Bike, Coordinates } from './itinerary.ts';
 
 export interface SearchForm {
   from: string;
@@ -9,8 +9,7 @@ export interface SearchForm {
   toAt?: Coordinates;
   /** The time searched; now when absent. */
   at?: Date;
-  /** A folded bike rides every vehicle, the bus included. */
-  folding: boolean;
+  bike: Bike;
 }
 
 export type SearchField = 'from' | 'to';
@@ -20,6 +19,13 @@ export type ParsedSearch =
   | { complete: false; values: SearchForm; missing: SearchField[] };
 
 const MAX_LENGTH = 200;
+
+/** The values of `velo`; a link from before the choice has none, or `pliant`, and keeps its results. */
+export const BIKE_PARAMS: Record<Bike, string> = { none: 'aucun', classic: 'classique', folding: 'pliant' };
+
+function bike(value: string | null): Bike {
+  return value === BIKE_PARAMS.none ? 'none' : value === BIKE_PARAMS.folding ? 'folding' : 'classic';
+}
 
 function field(params: URLSearchParams, name: string): string {
   return (params.get(name) ?? '').trim().slice(0, MAX_LENGTH);
@@ -33,7 +39,7 @@ export function parseSearch(params: URLSearchParams): ParsedSearch {
   const values: SearchForm = {
     from: field(params, 'de'),
     to: field(params, 'a'),
-    folding: params.get('velo') === 'pliant',
+    bike: bike(params.get('velo')),
     ...(fromAt && { fromAt }),
     ...(toAt && { toAt }),
     ...(Number.isNaN(at.getTime()) ? {} : { at }),

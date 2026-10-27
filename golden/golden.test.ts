@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { parse } from 'yaml';
 import { compare } from '../src/adapters/motis/plan.ts';
-import { type Coordinates, type Mode, type Option, options } from '../src/domain/itinerary.ts';
+import { type Bike, type Coordinates, type Mode, type Option, options } from '../src/domain/itinerary.ts';
 
 interface GoldenRoute {
   id: string;
@@ -11,7 +11,7 @@ interface GoldenRoute {
   to: string;
   at: string;
   option: Option;
-  folding?: boolean;
+  bike?: Bike;
   arriveBy?: boolean;
   expect: { never?: Mode[]; some?: Mode };
 }
@@ -43,7 +43,7 @@ describe.each(routes)('$id: $title', (route) => {
       to: coordinates(route.to),
       time: new Date(route.at),
       arriveBy: route.arriveBy ?? false,
-      folding: route.folding ?? false,
+      bike: route.bike ?? 'classic',
     });
     const modes = options(comparison, route.option).map((itinerary) => new Set(itinerary.legs.map(({ mode }) => mode)));
 

@@ -1,5 +1,6 @@
 ---
-import type { SearchField, SearchForm } from '../domain/search.ts';
+import type { Bike } from '../domain/itinerary.ts';
+import { BIKE_PARAMS, type SearchField, type SearchForm } from '../domain/search.ts';
 import PlaceInput from './PlaceInput.vue';
 
 interface Props {
@@ -7,7 +8,12 @@ interface Props {
   missing?: SearchField[];
 }
 
-const { values = { from: '', to: '', folding: false }, missing = [] } = Astro.props;
+const { values = { from: '', to: '', bike: 'classic' }, missing = [] } = Astro.props;
+const BIKES: [Bike, string][] = [
+  ['none', 'Pas de vélo'],
+  ['classic', 'Vélo classique'],
+  ['folding', 'Vélo pliant'],
+];
 const at = (coordinates: SearchForm['fromAt']) => coordinates && `${coordinates.lat},${coordinates.lon}`;
 ---
 
@@ -31,13 +37,24 @@ const at = (coordinates: SearchForm['fromAt']) => coordinates && `${coordinates.
     coordinates={at(values.toAt)}
     error={missing.includes('to') ? 'Indiquez un lieu d’arrivée.' : undefined}
   />
-  <div class="option">
-    <label>
-      <input name="velo" type="checkbox" value="pliant" checked={values.folding} aria-describedby="velo-aide" />
-      J’ai un vélo pliant
-    </label>
-    <p id="velo-aide">Plié, votre vélo monte aussi dans le bus.</p>
-  </div>
+  <fieldset>
+    <legend>Votre vélo</legend>
+    {
+      BIKES.map(([bike, label]) => (
+        <label>
+          <input
+            name="velo"
+            type="radio"
+            value={BIKE_PARAMS[bike]}
+            checked={values.bike === bike}
+            aria-describedby={bike === 'folding' ? 'velo-aide' : undefined}
+          />
+          {label}
+        </label>
+      ))
+    }
+    <p id="velo-aide">Plié, il monte aussi dans le bus.</p>
+  </fieldset>
   <button type="submit" class="primary">Comparer les trajets</button>
 </form>
 
@@ -49,21 +66,27 @@ const at = (coordinates: SearchForm['fromAt']) => coordinates && `${coordinates.
     border-radius: var(--radius);
   }
 
-  .option {
+  fieldset {
     margin: 1.25rem 0;
+    padding: 0;
+    border: 0;
   }
 
-  /* The whole line toggles the box: a 44 px target, the box itself staying the size people expect. */
+  legend {
+    padding: 0;
+    font-weight: 600;
+  }
+
+  /* The whole line checks the radio: a 44 px target, the radio itself staying the size people expect. */
   label {
     display: flex;
     gap: 0.75rem;
     align-items: center;
     min-height: 2.75rem;
-    font-weight: 600;
     cursor: pointer;
   }
 
-  input[type='checkbox'] {
+  input[type='radio'] {
     flex: none;
     width: 1.5rem;
     height: 1.5rem;
