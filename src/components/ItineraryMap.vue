@@ -24,6 +24,8 @@ const failed = ref(false);
 const canvas = ref<HTMLElement | null>(null);
 const toggle = ref<HTMLButtonElement | null>(null);
 let map: MapLibreMap | undefined;
+/** Counts the openings: a map that finishes loading after the person closed it is dropped. */
+let opening = 0;
 
 onMounted(() => {
   hydrated.value = true;
@@ -52,6 +54,7 @@ function loadStylesheet(): void {
 }
 
 async function show(): Promise<void> {
+  const current = ++opening;
   open.value = true;
   loading.value = true;
   failed.value = false;
@@ -67,6 +70,9 @@ async function show(): Promise<void> {
       throw new Error(`the itineraries answered ${response.status}`);
     }
     const data = (await response.json()) as ItineraryMap;
+    if (current !== opening || !open.value) {
+      return;
+    }
     map = new Map({
       container: canvas.value,
       style: STYLE,
@@ -76,7 +82,13 @@ async function show(): Promise<void> {
     });
     map.addControl(new NavigationControl({ showCompass: false }));
     map.getCanvas().setAttribute('aria-label', 'Carte des trajets ; leurs étapes sont décrites dans la liste.');
+    let loaded = false;
+    // OpenFreeMap down or its style broken: say so, since `load` will never come.
+    map.on('error', () => {
+      if (!loaded) failed.value = true;
+    });
     map.on('load', () => {
+      loaded = true;
       if (map === undefined) return;
       map.addSource('trajets', { type: 'geojson', data });
       map.addLayer({
@@ -124,6 +136,8 @@ async function show(): Promise<void> {
 }
 
 function hide(): void {
+  opening += 1;
+  loading.value = false;
   map?.remove();
   map = undefined;
   open.value = false;
