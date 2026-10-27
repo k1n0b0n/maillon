@@ -129,6 +129,16 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 - Given a folding bike, then transit with the bike allows the bus.
 - Given a search URL shared before this choice existed, then it gives the same results.
 
+### E4.9 The best option first, on its map
+
+Changes E4.6: the map loads with the results and draws one option at a time.
+
+- Given results, then the option that arrives first comes first, under its own heading, with its steps; the other options follow under theirs.
+- Given results, unless the browser asks to save data, then the best option's map shows without a press; with Save-Data, it waits for one.
+- Given another option, when the person asks to see it on the map, then it replaces the route drawn, and the page says which option the map shows.
+- Given a route on the map, then its start, its end and each change of mode or vehicle has a marker, told apart by more than colour.
+- Given the map, then it hides with the keyboard, and the text stays.
+
 ### E1.3 Accessibility, budgets and speed in CI
 
 - Given a change to the search, results or detail page, when CI runs, then axe reports no violation, or CI fails.

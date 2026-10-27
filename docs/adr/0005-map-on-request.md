@@ -1,6 +1,6 @@
 # ADR-0005: Map on request
 
-- **Status:** Accepted
+- **Status:** Accepted; the map's loading on request superseded by ADR-0006 (the map loads with the results)
 - **Date:** 2026-10-27
 
 ## Context

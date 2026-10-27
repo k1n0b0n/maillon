@@ -39,6 +39,7 @@ One story is one pull request. A `docs:` pull request is only for planning witho
 - An ADR comes before the code for any decision costly to reverse.
 - A route reported wrong becomes a failing golden route before its fix.
 - RGAA AA and RGESN apply with the budgets of `prd.md`. Statements say "partially compliant" until an external audit says otherwise.
+- A delivered story is never rewritten nor replaced in `prd.md`: a new story describes the change and names the one it changes.
 
 ## Milestone loop
 
@@ -62,13 +63,14 @@ A process rule changes at a retro, as an experiment with a hypothesis, a measure
 | 2026-10-26 | v2 of balise's BMAD-lite: capped artefacts, rules in this file only, ideas as issues, a retro per milestone | balise: 41 % of commits were `docs`, its rules were copied in 5 places and changed 4 times in 6 days | M1 retro |
 | 2026-10-26 | Every pull request opens ready for review | Maintainer's decision after story 001: the draft added a step and protected nothing | M1 retro |
 | 2026-10-26 | Documents as simple as possible without losing important information | Maintainer's decision | M1 retro |
+| 2026-10-27 | A delivered story is never rewritten in the PRD; a new story describes the change | Maintainer's decision when E4.9 changed E4.6's map: the PRD keeps what was delivered and why it changed | M1 retro |
 
 ## Current state
 
 Replaced at the end of every session. Five items, 12 lines at most.
 
-- **Milestone:** M0, 5 of 6 stories done; M1, 5 of 9.
-- **Current story:** 009, E4.6 map of the itineraries (ADR-0005), 010, E4.7 readable on a phone, and 011, E4.8 the bike choice, in review.
+- **Milestone:** M0, 5 of 6 stories done; M1, 5 of 10.
+- **Current story:** 009, E4.6 map of the itineraries (ADR-0005), 010, E4.7 readable on a phone, and 011, E4.8 the bike choice, in review; 012, E4.9 the best option on its map (ADR-0006), planned.
 - **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app; run the `osm` workflow once to create `osm-gironde`; at each session, check whether triptix-tech/adr#32 (house numbers mapped by `associatedStreet`, motis#1113) is merged and in a MOTIS release, then bump the engine and search "36 rue Brémontier, Bordeaux".
 - **Next:** E1.2 delivery, which needs the maintainer on the server; E4.4 when; E1.3 budgets in CI.
 - **Blockers:** none.

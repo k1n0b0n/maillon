@@ -31,6 +31,7 @@ Numbered in the order they are written.
 | Hosting and delivery | balise's final state: GHCR images, SSH deploy with a forced command, the host's nginx, release-please | E1.2 |
 | Data pipeline and bike rules | [ADR-0004](adr/0004-data-pipeline.md), accepted: nightly releases, OSM clipped in CI | E2.2 |
 | Map on request | [ADR-0005](adr/0005-map-on-request.md), accepted: MapLibre and OpenFreeMap, loaded on request | E4.6 |
+| Map with the results | [ADR-0006](adr/0006-map-with-the-results.md), accepted: the best option's map loads with the results, unless the browser asks to save data | E4.9 |
 
 ## Small decisions
 
