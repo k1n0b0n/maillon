@@ -69,6 +69,6 @@ Replaced at the end of every session. Five items, 12 lines at most.
 
 - **Milestone:** M0, 5 of 6 stories done; M1, 5 of 8.
 - **Current story:** 009, E4.6 map of the itineraries (ADR-0005), and 010, E4.7 readable on a phone, in review.
-- **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app; run the `osm` workflow once to create `osm-gironde`.
+- **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app; run the `osm` workflow once to create `osm-gironde`; at each session, check whether triptix-tech/adr#32 (house numbers mapped by `associatedStreet`, motis#1113) is merged and in a MOTIS release, then bump the engine and search "36 rue Brémontier, Bordeaux".
 - **Next:** E1.2 delivery, which needs the maintainer on the server; E4.4 when; E1.3 budgets in CI.
 - **Blockers:** none.
