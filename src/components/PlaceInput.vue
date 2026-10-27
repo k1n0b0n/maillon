@@ -176,6 +176,28 @@ function useMyPosition(): void {
         :disabled="locating"
         @click="useMyPosition"
       >
+        <svg
+          class="icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M2 12h3M19 12h3M12 2v3M12 19v3" />
+          <circle
+            cx="12"
+            cy="12"
+            r="7"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="3"
+          />
+        </svg>
         {{ locating ? 'Localisation…' : 'Utiliser ma position' }}
       </button>
       <span
@@ -194,13 +216,8 @@ function useMyPosition(): void {
 
 label {
   display: block;
-}
-
-input[type='text'] {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0.5rem;
-  font: inherit;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
 }
 
 ul {
@@ -208,16 +225,24 @@ ul {
   z-index: 1;
   left: 0;
   right: 0;
-  margin: 0;
-  padding: 0;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem 0;
   list-style: none;
-  background: var(--background);
-  border: 1px solid var(--muted);
+  background: var(--surface);
+  border: 2px solid var(--control);
+  border-radius: var(--radius);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 20%);
 }
 
 li {
-  padding: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
+}
+
+li:hover,
+li[aria-selected='true'] {
+  background: var(--accent-soft);
 }
 
 li[aria-selected='true'] {
@@ -236,13 +261,17 @@ li[aria-selected='true'] {
 }
 
 .error {
+  display: block;
   color: var(--error);
+}
+
+/* An empty live region stays in the page, so that the message added later is announced. */
+.error:not(:empty) {
+  margin-top: 0.25rem;
 }
 
 .locate {
   margin-top: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  font: inherit;
 }
 
 .visually-hidden {

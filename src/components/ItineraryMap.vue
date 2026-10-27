@@ -248,11 +248,6 @@ function keydown(event: KeyboardEvent): void {
   margin: 2rem 0;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  font: inherit;
-}
-
 .legend {
   display: flex;
   flex-wrap: wrap;

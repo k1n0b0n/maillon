@@ -2,6 +2,7 @@
 import { MOTIS_URL } from 'astro:env/server';
 import { cachedCompare } from '../adapters/motis/cache.ts';
 import { findPlace } from '../adapters/motis/geocode.ts';
+import Icon from '../components/Icon.astro';
 import ItineraryMap from '../components/ItineraryMap.vue';
 import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
@@ -73,6 +74,18 @@ const mapQuery =
         ...(values.folding ? { velo: 'pliant' } : {}),
       }).toString()
     : '';
+// The way back keeps the time asked, if any, and the folding bike.
+const reverseQuery =
+  outcome.kind === 'found'
+    ? new URLSearchParams({
+        de: outcome.to.name,
+        dep: at(outcome.to.coordinates),
+        a: outcome.from.name,
+        arr: at(outcome.from.coordinates),
+        ...(values.at ? { quand: values.at.toISOString() } : {}),
+        ...(values.folding ? { velo: 'pliant' } : {}),
+      }).toString()
+    : '';
 
 const title =
   outcome.kind === 'found'
@@ -89,10 +102,22 @@ const title =
         <h1>
           {outcome.from.name} → {outcome.to.name}
         </h1>
-        <p>Départ maintenant. Les options sont classées par heure d’arrivée.</p>
+        <div class="search">
+          <p>Départ maintenant. Les options sont classées par heure d’arrivée.</p>
+          <a class="swap" href={`/trajet?${reverseQuery}`}>
+            <Icon name="swap" />
+            Inverser le trajet
+          </a>
+        </div>
         <ol class="cards">
-          {outcome.cards.map((card) => (
-            <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} folding={values.folding} />
+          {outcome.cards.map((card, index) => (
+            <OptionCard
+              card={card}
+              origin={outcome.from.name}
+              destination={outcome.to.name}
+              folding={values.folding}
+              first={index === 0}
+            />
           ))}
         </ol>
         {outcome.cards.some(({ itinerary }) => itinerary) && (
@@ -140,7 +165,21 @@ const title =
 </Base>
 
 <style>
+  .search p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .swap {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 600;
+  }
+
   .cards {
+    margin: 0.5rem 0 0;
     padding: 0;
     list-style: none;
   }

@@ -1,4 +1,5 @@
-import type { CardKind } from '../domain/comparison.ts';
+import type { Card, CardKind } from '../domain/comparison.ts';
+import { isTransit, type Mode } from '../domain/itinerary.ts';
 
 export function optionName(kind: CardKind, folding: boolean): string {
   switch (kind) {
@@ -11,6 +12,16 @@ export function optionName(kind: CardKind, folding: boolean): string {
     case 'transitBike':
       return folding ? 'Transports avec votre vélo pliant' : 'Transports avec votre vélo';
   }
+}
+
+/** The icons of an option's card: the vehicles it rides, then the bike it carries; the tram stands for transit found nowhere. */
+export function cardModes({ kind, itinerary }: Card): Mode[] {
+  if (kind === 'walk' || kind === 'bike') {
+    return [kind];
+  }
+  const rides = [...new Set((itinerary?.legs ?? []).filter(isTransit).map(({ mode }) => mode))];
+  const shown: Mode[] = rides.length > 0 ? rides : ['tram'];
+  return kind === 'transitBike' ? [...shown, 'bike'] : shown;
 }
 
 /**
