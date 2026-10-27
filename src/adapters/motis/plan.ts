@@ -1,5 +1,6 @@
 import type { Comparison, Itinerary, Leg, PlanQuery } from '../../domain/itinerary.ts';
 import { MODES } from './modes.ts';
+import { decodePolyline } from './polyline.ts';
 
 interface MotisPlace {
   name: string;
@@ -14,6 +15,7 @@ interface MotisLeg {
   distance?: number;
   routeShortName?: string;
   headsign?: string;
+  legGeometry?: { points: string; precision: number };
 }
 
 interface MotisItinerary {
@@ -43,6 +45,7 @@ function leg(motis: MotisLeg): Leg {
     ...(motis.distance === undefined ? {} : { distanceMeters: Math.round(motis.distance) }),
     ...(motis.routeShortName ? { line: motis.routeShortName } : {}),
     ...(motis.headsign ? { headsign: motis.headsign } : {}),
+    ...(motis.legGeometry ? { path: decodePolyline(motis.legGeometry.points, motis.legGeometry.precision) } : {}),
   };
 }
 

@@ -26,6 +26,8 @@ export interface Leg {
   distanceMeters?: number;
   line?: string;
   headsign?: string;
+  /** The way the leg follows, for the map. */
+  path?: Coordinates[];
 }
 
 export interface Itinerary {

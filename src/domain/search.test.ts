@@ -26,6 +26,14 @@ describe('parseSearch', () => {
     expect(parsed.complete && parsed.search).toEqual({ from: 'Ma position', to: 'Bourse', folding: false, fromAt: { lat: 44.8, lon: -0.6 } });
   });
 
+  it('reads the time searched, and ignores one that is not a date', () => {
+    const at = parseSearch(new URLSearchParams('de=Pessac&a=Bourse&quand=2026-10-27T09:30:00.000Z'));
+    const wrong = parseSearch(new URLSearchParams('de=Pessac&a=Bourse&quand=demain'));
+
+    expect(at.complete && at.search.at?.toISOString()).toBe('2026-10-27T09:30:00.000Z');
+    expect(wrong.complete && wrong.search.at).toBeUndefined();
+  });
+
   it('cuts a place name at 200 characters', () => {
     const parsed = parseSearch(new URLSearchParams({ de: 'x'.repeat(500), a: 'Pessac' }));
 

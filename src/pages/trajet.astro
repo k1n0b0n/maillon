@@ -1,21 +1,23 @@
 ---
 import { MOTIS_URL } from 'astro:env/server';
+import { cachedCompare } from '../adapters/motis/cache.ts';
 import { findPlace } from '../adapters/motis/geocode.ts';
-import { isInsideArea } from '../domain/area.ts';
-import { compare } from '../adapters/motis/plan.ts';
+import ItineraryMap from '../components/ItineraryMap.vue';
 import OptionCard from '../components/OptionCard.astro';
 import SearchForm from '../components/SearchForm.astro';
+import { isInsideArea } from '../domain/area.ts';
 import { type Card, cards } from '../domain/comparison.ts';
 import type { Place } from '../domain/itinerary.ts';
 import { parseSearch, type SearchForm as Search } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
+import { optionName } from '../ui/options.ts';
 
 type Outcome =
   | { kind: 'missing' }
   | { kind: 'unknown'; texts: string[] }
   | { kind: 'outside'; names: string[] }
   | { kind: 'down' }
-  | { kind: 'found'; from: Place; to: Place; cards: Card[] };
+  | { kind: 'found'; from: Place; to: Place; cards: Card[]; time: Date };
 
 const parsed = parseSearch(Astro.url.searchParams);
 const values = parsed.complete ? parsed.search : parsed.values;
@@ -34,14 +36,16 @@ async function search(texts: Search): Promise<Outcome> {
   if (outside.length > 0) {
     return { kind: 'outside', names: outside };
   }
-  const comparison = await compare(MOTIS_URL, {
+  // To the minute: the map asks for the same search, and the cache knows it.
+  const time = texts.at ?? new Date(Math.floor(Date.now() / 60_000) * 60_000);
+  const comparison = await cachedCompare(MOTIS_URL, {
     from: from.coordinates,
     to: to.coordinates,
-    time: new Date(),
+    time,
     arriveBy: false,
     folding: texts.folding,
   });
-  return { kind: 'found', from, to, cards: cards(comparison) };
+  return { kind: 'found', from, to, cards: cards(comparison), time };
 }
 
 let outcome: Outcome;
@@ -56,6 +60,19 @@ if (!parsed.complete) {
     Astro.response.status = 503;
   }
 }
+
+const at = ({ lat, lon }: Place['coordinates']) => `${lat.toFixed(5)},${lon.toFixed(5)}`;
+const mapQuery =
+  outcome.kind === 'found'
+    ? new URLSearchParams({
+        de: outcome.from.name,
+        dep: at(outcome.from.coordinates),
+        a: outcome.to.name,
+        arr: at(outcome.to.coordinates),
+        quand: outcome.time.toISOString(),
+        ...(values.folding ? { velo: 'pliant' } : {}),
+      }).toString()
+    : '';
 
 const title =
   outcome.kind === 'found'
@@ -78,6 +95,13 @@ const title =
             <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} folding={values.folding} />
           ))}
         </ol>
+        {outcome.cards.some(({ itinerary }) => itinerary) && (
+          <ItineraryMap
+            client:load
+            query={mapQuery}
+            options={outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.folding) }))}
+          />
+        )}
         <h2>Modifier la recherche</h2>
       </>
     )

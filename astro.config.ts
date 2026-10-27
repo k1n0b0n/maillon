@@ -6,6 +6,8 @@ export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   integrations: [vue()],
+  // MapLibre's worker is an ES module that imports a chunk it shares with the page.
+  vite: { worker: { format: 'es' } },
   env: {
     schema: {
       MOTIS_URL: envField.string({ context: 'server', access: 'secret', default: 'http://localhost:8080' }),

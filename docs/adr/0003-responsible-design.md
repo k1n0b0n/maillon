@@ -1,6 +1,6 @@
 # ADR-0003: Responsible design
 
-- **Status:** Accepted
+- **Status:** Accepted, amended by ADR-0005 (map tiles from a third party, on request)
 - **Date:** 2026-10-26
 
 ## Context
