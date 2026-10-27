@@ -113,6 +113,14 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 - Given the results, when the person asks for the map, then every itinerary found is drawn on it, each told apart by more than its colour; until then, no map code or tile is loaded.
 - Given the map is open, then it closes with the keyboard and the text stays on the page.
 
+### E4.7 Readable on a phone
+
+- Given the results, then each option shows its arrival time first and largest, then its duration, changes and departure; the option that arrives first says so in words.
+- Given a route's steps, then each one starts with its mode, line and direction, then its stops and times; no mode is told by an icon alone.
+- Given the search form on a phone, then every field, button and checkbox is at least 44 px high, and the folding bike choice says what it changes.
+- Given the home page, then one sentence before the form says what maillon compares, the bike on board included.
+- Given a 320 px width, 200 % zoom, light or dark mode, then nothing scrolls sideways and text and controls keep AA contrast.
+
 ### E1.3 Accessibility, budgets and speed in CI
 
 - Given a change to the search, results or detail page, when CI runs, then axe reports no violation, or CI fails.
