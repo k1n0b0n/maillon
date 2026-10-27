@@ -95,9 +95,12 @@ function keydown(event: KeyboardEvent): void {
 function useMyPosition(): void {
   locateError.value = '';
   locating.value = true;
+  const typedBefore = text.value;
   navigator.geolocation.getCurrentPosition(
     ({ coords }) => {
       locating.value = false;
+      // The person typed a place while waiting: their choice wins.
+      if (text.value !== typedBefore) return;
       text.value = 'Ma position';
       coordinates.value = `${coords.latitude.toFixed(5)},${coords.longitude.toFixed(5)}`;
     },
@@ -133,10 +136,10 @@ function useMyPosition(): void {
       @blur="open = false"
     >
     <input
+      v-if="hydrated && coordinates !== ''"
       type="hidden"
       :name="coordinatesName"
       :value="coordinates"
-      :disabled="coordinates === ''"
     >
     <ul
       v-show="expanded"

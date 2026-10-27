@@ -25,8 +25,9 @@ export function usePlaceSuggestions(text: Ref<string>, enabled: Ref<boolean>) {
 
   watch([text, enabled], ([query, on]) => {
     clearTimeout(timer);
+    // An answer for the previous text must not land after this one.
+    pending?.abort();
     if (!on || query.trim().length < MIN_LENGTH) {
-      pending?.abort();
       suggestions.value = [];
       return;
     }
