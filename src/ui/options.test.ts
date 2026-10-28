@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Itinerary, Leg } from '../domain/itinerary.ts';
-import { cardModes } from './options.ts';
+import { cardModes, optionLabel } from './options.ts';
 
 const at = new Date('2026-10-27T09:30:00Z');
 const leg = (mode: Leg['mode']): Leg => ({ mode, from: '', to: '', departure: at, arrival: at });
@@ -20,5 +20,13 @@ describe('cardModes', () => {
   it('shows the tram for a transit option with no result', () => {
     expect(cardModes({ kind: 'transit' })).toEqual(['tram']);
     expect(cardModes({ kind: 'transitBike' })).toEqual(['tram', 'bike']);
+  });
+});
+
+describe('optionLabel', () => {
+  it('names each option short enough for half a phone', () => {
+    expect(optionLabel('transit', 'classic')).toBe('Transports');
+    expect(optionLabel('transitBike', 'classic')).toBe('Transports + vélo');
+    expect(optionLabel('transitBike', 'folding')).toBe('Transports + vélo pliant');
   });
 });

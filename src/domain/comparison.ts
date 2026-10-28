@@ -15,6 +15,17 @@ export function optionsFor(bike: Bike): readonly CardKind[] {
   return bike === 'none' ? ['walk', 'transit'] : ORDER;
 }
 
+/**
+ * The option the results show among the sorted cards: the one asked, even without a result, to say why; else the first,
+ * which arrives first. None when nothing was found: the page then only says why.
+ */
+export function shownCard(sorted: Card[], asked?: CardKind): Card | undefined {
+  if (!sorted.some(({ itinerary }) => itinerary !== undefined)) {
+    return undefined;
+  }
+  return sorted.find(({ kind }) => kind === asked) ?? sorted[0];
+}
+
 /** One card per option asked, sorted by arrival, then by fewer changes; the options without a result come last. */
 export function cards(comparison: Comparison, kinds: readonly CardKind[]): Card[] {
   const best: Record<CardKind, Itinerary | undefined> = {

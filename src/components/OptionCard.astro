@@ -3,7 +3,7 @@ import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
 import { type Bike, isTransit } from '../domain/itinerary.ts';
 import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
-import { cardModes, optionName } from '../ui/options.ts';
+import { cardModes, optionName, panelId } from '../ui/options.ts';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -11,8 +11,10 @@ interface Props {
   origin: string;
   destination: string;
   bike: Bike;
-  /** The option that arrives first: on its own, its steps open, the map under it. */
+  /** The option that arrives first, which says so. */
   best?: boolean;
+  /** Another option than the one shown: the picker shows it in place, or its link loads it. */
+  hidden?: boolean;
 }
 
 const STEPS: Record<CardKind, string> = {
@@ -29,9 +31,9 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination, bike, best = false } = Astro.props;
-const Root = best ? 'div' : 'li';
+const { card, origin, destination, bike, best = false, hidden = false } = Astro.props;
 const { kind, itinerary } = card;
+const id = panelId(kind);
 const transit = kind === 'transit' || kind === 'transitBike';
 const name = optionName(kind, bike);
 const notes =
@@ -42,11 +44,11 @@ const notes =
     : [];
 ---
 
-<Root class:list={['card', { best, empty: itinerary === undefined }]}>
-  <h3>
+<section id={id} class:list={['card', { empty: itinerary === undefined }]} aria-labelledby={`${id}-titre`} hidden={hidden}>
+  <h2 id={`${id}-titre`}>
     <span class="modes">{cardModes(card).map((mode) => <Icon name={mode} />)}</span>
     {name}
-  </h3>
+  </h2>
   {
     itinerary ? (
       <>
@@ -66,8 +68,7 @@ const notes =
             ))}
           </ul>
         )}
-        <slot name="map" />
-        <details open={best}>
+        <details open>
           <summary>{STEPS[kind]}</summary>
           <ol class="steps">
             {itinerary.legs.map((leg) => {
@@ -93,7 +94,7 @@ const notes =
       <p class="missing">{MISSING[kind]}</p>
     )
   }
-</Root>
+</section>
 
 <style>
   .card {
@@ -104,16 +105,12 @@ const notes =
     border-radius: var(--radius);
   }
 
-  .card.best {
-    border: 2px solid var(--accent);
-  }
-
   .card.empty {
     background: transparent;
     border: 2px dashed var(--border);
   }
 
-  h3 {
+  h2 {
     display: flex;
     gap: 0.5rem;
     align-items: center;

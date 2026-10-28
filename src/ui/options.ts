@@ -14,6 +14,34 @@ export function optionName(kind: CardKind, bike: Bike): string {
   }
 }
 
+/** The option's name in the picker, where two options share a phone's width. */
+export function optionLabel(kind: CardKind, bike: Bike): string {
+  switch (kind) {
+    case 'transit':
+      return 'Transports';
+    case 'transitBike':
+      return bike === 'folding' ? 'Transports + vélo pliant' : 'Transports + vélo';
+    default:
+      return optionName(kind, bike);
+  }
+}
+
+/** The id of an option's panel, shared by the picker that shows it and the page that renders it. */
+export const panelId = (kind: CardKind): string => `option-${kind}`;
+
+/** One option in the picker: what it takes, when it arrives, and the link that shows it. */
+export interface PickerOption {
+  kind: CardKind;
+  name: string;
+  label: string;
+  modes: Mode[];
+  href: string;
+  /** Absent when the engine found nothing for this option. */
+  arrival?: { text: string; iso: string };
+  duration?: string;
+  first: boolean;
+}
+
 /** The icons of an option's card: the vehicles it rides, then the bike it carries; the tram stands for transit found nowhere. */
 export function cardModes({ kind, itinerary }: Card): Mode[] {
   if (kind === 'walk' || kind === 'bike') {

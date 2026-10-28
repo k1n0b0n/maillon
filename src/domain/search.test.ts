@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseSearch } from './search.ts';
+import { parseOption, parseSearch } from './search.ts';
 
 describe('parseSearch', () => {
   it('reads a complete search from the URL', () => {
@@ -49,5 +49,21 @@ describe('parseSearch', () => {
     const parsed = parseSearch(new URLSearchParams({ de: 'x'.repeat(500), a: 'Pessac' }));
 
     expect(parsed.complete && parsed.search.from.length).toBe(200);
+  });
+});
+
+describe('parseOption', () => {
+  it('reads the option shown', () => {
+    const option = (value: string) => parseOption(new URLSearchParams({ option: value }));
+
+    expect(option('pied')).toBe('walk');
+    expect(option('velo')).toBe('bike');
+    expect(option('transports')).toBe('transit');
+    expect(option('transports-velo')).toBe('transitBike');
+  });
+
+  it('leaves the choice to the page without an option, or with an unknown one', () => {
+    expect(parseOption(new URLSearchParams('de=Pessac&a=Bourse'))).toBeUndefined();
+    expect(parseOption(new URLSearchParams('option=avion'))).toBeUndefined();
   });
 });
