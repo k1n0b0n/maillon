@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cards, optionsFor } from './comparison.ts';
+import { cards, optionsFor, shownCard } from './comparison.ts';
 import type { Itinerary, Leg } from './itinerary.ts';
 
 const at = (time: string) => new Date(`2026-10-27T${time}:00+01:00`);
@@ -50,6 +50,27 @@ describe('cards', () => {
     const sorted = cards({ walk: trip('11:02', 'walk'), transit: [], transitBike: [] }, optionsFor('none'));
 
     expect(sorted).toEqual([{ kind: 'walk', itinerary: trip('11:02', 'walk') }, { kind: 'transit' }]);
+  });
+});
+
+describe('shownCard', () => {
+  const sorted = cards({ walk: trip('11:02', 'walk'), bike: trip('10:41', 'bike'), transit: [], transitBike: [] }, four);
+
+  it('shows the option that arrives first, unless another is asked', () => {
+    expect(shownCard(sorted)?.kind).toBe('bike');
+    expect(shownCard(sorted, 'walk')?.kind).toBe('walk');
+  });
+
+  it('shows an option asked with no result, to say why', () => {
+    expect(shownCard(sorted, 'transit')).toEqual({ kind: 'transit' });
+  });
+
+  it('shows the first option when the one asked is not compared', () => {
+    expect(shownCard(cards({ walk: trip('11:02', 'walk'), transit: [], transitBike: [] }, optionsFor('none')), 'bike')?.kind).toBe('walk');
+  });
+
+  it('shows none when nothing was found', () => {
+    expect(shownCard(cards({ transit: [], transitBike: [] }, four), 'walk')).toBeUndefined();
   });
 });
 

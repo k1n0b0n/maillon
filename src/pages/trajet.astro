@@ -5,13 +5,15 @@ import { findPlace } from '../adapters/motis/geocode.ts';
 import Icon from '../components/Icon.astro';
 import ItineraryMap from '../components/ItineraryMap.vue';
 import OptionCard from '../components/OptionCard.astro';
+import OptionPicker from '../components/OptionPicker.vue';
 import SearchForm from '../components/SearchForm.astro';
 import { isInsideArea } from '../domain/area.ts';
-import { type Card, cards, optionsFor } from '../domain/comparison.ts';
+import { type Card, cards, optionsFor, shownCard } from '../domain/comparison.ts';
 import type { Place } from '../domain/itinerary.ts';
-import { BIKE_PARAMS, parseSearch, type SearchForm as Search } from '../domain/search.ts';
+import { BIKE_PARAMS, OPTION_PARAMS, parseOption, parseSearch, type SearchForm as Search } from '../domain/search.ts';
 import Base from '../layouts/Base.astro';
-import { optionName } from '../ui/options.ts';
+import { clock, duration } from '../ui/format.ts';
+import { cardModes, optionLabel, optionName, type PickerOption } from '../ui/options.ts';
 
 type Outcome =
   | { kind: 'missing' }
@@ -87,6 +89,30 @@ const reverseQuery =
       }).toString()
     : '';
 
+const found = outcome.kind === 'found' ? outcome.cards : [];
+// `cards()` sorts the options found first, by arrival: the best one is the first, if any.
+const best = found[0]?.itinerary ? found[0] : undefined;
+const shown = shownCard(found, parseOption(Astro.url.searchParams));
+const mapOptions = found.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.bike) }));
+// Each option's link keeps the search and says which option to show: it works without JavaScript, and shares.
+const pickerOptions = found.map((card): PickerOption => {
+  const params = new URLSearchParams(Astro.url.searchParams);
+  params.set('option', OPTION_PARAMS[card.kind]);
+  const { itinerary } = card;
+  return {
+    kind: card.kind,
+    name: optionName(card.kind, values.bike),
+    label: optionLabel(card.kind, values.bike),
+    modes: cardModes(card),
+    href: `/trajet?${params}`,
+    first: card === best,
+    ...(itinerary && {
+      arrival: { text: clock(itinerary.arrival), iso: itinerary.arrival.toISOString() },
+      duration: duration(itinerary.departure, itinerary.arrival),
+    }),
+  };
+});
+
 const title =
   outcome.kind === 'found'
     ? `${outcome.from.name} → ${outcome.to.name}`
@@ -102,31 +128,31 @@ const title =
         <h1>
           {outcome.from.name} → {outcome.to.name}
         </h1>
-        <div class="search">
-          <p>Départ maintenant. Les options sont classées par heure d’arrivée.</p>
+        <p class="search">
+          Départ maintenant.
           <a class="swap" href={`/trajet?${reverseQuery}`}>
             <Icon name="swap" />
             Inverser le trajet
           </a>
-        </div>
-        <ol class="cards">
-          {outcome.cards.map((card, index) => (
-            <OptionCard
-              card={card}
-              origin={outcome.from.name}
-              destination={outcome.to.name}
-              bike={values.bike}
-              first={index === 0}
-            />
-          ))}
-        </ol>
-        {outcome.cards.some(({ itinerary }) => itinerary) && (
-          <ItineraryMap
-            client:load
-            query={mapQuery}
-            options={outcome.cards.filter(({ itinerary }) => itinerary).map(({ kind }) => ({ kind, name: optionName(kind, values.bike) }))}
-          />
+        </p>
+        {shown ? (
+          <>
+            <OptionPicker client:load options={pickerOptions} initial={shown.kind} />
+            <ItineraryMap client:load query={mapQuery} options={mapOptions} initial={shown.kind} />
+          </>
+        ) : (
+          <h2>Aucun trajet trouvé</h2>
         )}
+        {found.map((card) => (
+          <OptionCard
+            card={card}
+            origin={outcome.from.name}
+            destination={outcome.to.name}
+            bike={values.bike}
+            best={card === best}
+            hidden={shown !== undefined && card !== shown}
+          />
+        ))}
         <h2>Modifier la recherche</h2>
       </>
     )
@@ -165,7 +191,17 @@ const title =
 </Base>
 
 <style>
-  .search p {
+  /* Short, so that the picker and the map fit a phone's first screen. */
+  h1 {
+    margin-bottom: 0;
+    font-size: 1.375rem;
+  }
+
+  .search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    align-items: center;
     margin: 0;
     color: var(--muted);
   }
@@ -176,11 +212,5 @@ const title =
     align-items: center;
     min-height: 2.75rem;
     font-weight: 600;
-  }
-
-  .cards {
-    margin: 0.5rem 0 0;
-    padding: 0;
-    list-style: none;
   }
 </style>

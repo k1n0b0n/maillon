@@ -26,7 +26,7 @@ One form, one screen. From a place to a place, now or at a chosen time over the 
 - From and to: an address, a stop name or "my position".
 - When: now, leave at or arrive by, on any date the timetables cover.
 - Walk, bike, transit, transit + bike, and a folding bike option that allows the bus.
-- Step-by-step text; a map only on request.
+- Step-by-step text; the best option's map with the results, the others on request.
 - Real-time delays for departures in the near future (M2).
 
 ## Out of scope for the MVP

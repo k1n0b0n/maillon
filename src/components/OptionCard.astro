@@ -3,7 +3,7 @@ import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
 import { type Bike, isTransit } from '../domain/itinerary.ts';
 import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
-import { cardModes, optionName } from '../ui/options.ts';
+import { cardModes, optionName, panelId } from '../ui/options.ts';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -11,8 +11,10 @@ interface Props {
   origin: string;
   destination: string;
   bike: Bike;
-  /** The first option found, which the list sorts by arrival. */
-  first: boolean;
+  /** The option that arrives first, which says so. */
+  best?: boolean;
+  /** Another option than the one shown: the picker shows it in place, or its link loads it. */
+  hidden?: boolean;
 }
 
 const STEPS: Record<CardKind, string> = {
@@ -29,8 +31,9 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination, bike, first } = Astro.props;
+const { card, origin, destination, bike, best = false, hidden = false } = Astro.props;
 const { kind, itinerary } = card;
+const id = panelId(kind);
 const transit = kind === 'transit' || kind === 'transitBike';
 const name = optionName(kind, bike);
 const notes =
@@ -41,15 +44,15 @@ const notes =
     : [];
 ---
 
-<li class:list={['card', { empty: itinerary === undefined }]}>
-  <h2>
+<section id={id} class:list={['card', { empty: itinerary === undefined }]} aria-labelledby={`${id}-titre`} hidden={hidden}>
+  <h2 id={`${id}-titre`}>
     <span class="modes">{cardModes(card).map((mode) => <Icon name={mode} />)}</span>
     {name}
   </h2>
   {
     itinerary ? (
       <>
-        {first && <p class="first">Arrive en premier</p>}
+        {best && <p class="first">Arrive en premier</p>}
         <p class="arrival">
           Arrivée <time datetime={itinerary.arrival.toISOString()}>{clock(itinerary.arrival)}</time>
         </p>
@@ -65,7 +68,7 @@ const notes =
             ))}
           </ul>
         )}
-        <details>
+        <details open>
           <summary>{STEPS[kind]}</summary>
           <ol class="steps">
             {itinerary.legs.map((leg) => {
@@ -91,7 +94,7 @@ const notes =
       <p class="missing">{MISSING[kind]}</p>
     )
   }
-</li>
+</section>
 
 <style>
   .card {

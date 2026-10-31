@@ -1,4 +1,5 @@
 import { parseCoordinates } from './area.ts';
+import type { CardKind } from './comparison.ts';
 import type { Bike, Coordinates } from './itinerary.ts';
 
 export interface SearchForm {
@@ -29,6 +30,15 @@ function bike(value: string | null): Bike {
 
 function field(params: URLSearchParams, name: string): string {
   return (params.get(name) ?? '').trim().slice(0, MAX_LENGTH);
+}
+
+/** The values of `option`, the option the results show: the picker's links carry it, so a shared link shows the same one. */
+export const OPTION_PARAMS: Record<CardKind, string> = { walk: 'pied', bike: 'velo', transit: 'transports', transitBike: 'transports-velo' };
+
+/** Reads the option shown; without one, or with an unknown one, the page shows the one that arrives first. */
+export function parseOption(params: URLSearchParams): CardKind | undefined {
+  const value = params.get('option');
+  return (Object.keys(OPTION_PARAMS) as CardKind[]).find((kind) => OPTION_PARAMS[kind] === value);
 }
 
 /** Reads a search from its URL: `de`, `a`, `dep`, `arr`, `velo` and `quand`, the French names the form submits. */
