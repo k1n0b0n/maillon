@@ -1,0 +1,82 @@
+---
+import type { Card, CardKind } from '../domain/comparison.ts';
+import { changes, clock, duration, step } from '../ui/format.ts';
+
+interface Props {
+  card: Card;
+  origin: string;
+  destination: string;
+}
+
+const NAMES: Record<CardKind, string> = {
+  walk: 'À pied',
+  bike: 'À vélo',
+  transit: 'Transports en commun',
+  transitBike: 'Transports avec votre vélo',
+};
+
+const STEPS: Record<CardKind, string> = {
+  walk: 'Étapes à pied',
+  bike: 'Étapes à vélo',
+  transit: 'Étapes en transports en commun',
+  transitBike: 'Étapes en transports avec votre vélo',
+};
+
+const MISSING: Record<CardKind, string> = {
+  walk: 'Trop loin pour y aller à pied.',
+  bike: 'Aucun itinéraire à vélo trouvé.',
+  transit: 'Aucun départ en transports en commun dans les prochaines heures.',
+  transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
+};
+
+const { card, origin, destination } = Astro.props;
+const { kind, itinerary } = card;
+const transit = kind === 'transit' || kind === 'transitBike';
+---
+
+<li class="card">
+  <h2>{NAMES[kind]}</h2>
+  {
+    itinerary ? (
+      <>
+        <p>
+          <strong>
+            Arrivée à <time datetime={itinerary.arrival.toISOString()}>{clock(itinerary.arrival)}</time>
+          </strong>
+          , {duration(itinerary.departure, itinerary.arrival)}
+          {transit && `, ${changes(itinerary)}`}. Départ à{' '}
+          <time datetime={itinerary.departure.toISOString()}>{clock(itinerary.departure)}</time>.
+        </p>
+        <details>
+          <summary>{STEPS[kind]}</summary>
+          <ol>
+            {itinerary.legs.map((leg) => (
+              <li>{step(leg, origin, destination)}</li>
+            ))}
+          </ol>
+        </details>
+      </>
+    ) : (
+      <p>{MISSING[kind]}</p>
+    )
+  }
+</li>
+
+<style>
+  .card {
+    margin: 1rem 0;
+    padding: 0 1rem;
+    border: 1px solid var(--muted);
+    border-radius: 0.5rem;
+  }
+
+  h2 {
+    margin: 0.75rem 0 0;
+    font-size: 1.125rem;
+  }
+
+  summary {
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+  }
+</style>
