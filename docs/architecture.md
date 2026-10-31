@@ -30,6 +30,7 @@ Numbered in the order they are written.
 | Responsible design | [ADR-0003](adr/0003-responsible-design.md), accepted: budgets in CI, a manual audit per milestone, honest statements | E1.1 |
 | Hosting and delivery | balise's final state: GHCR images, SSH deploy with a forced command, the host's nginx, release-please | E1.2 |
 | Data pipeline and bike rules | [ADR-0004](adr/0004-data-pipeline.md), accepted: nightly releases, OSM clipped in CI | E2.2 |
+| Map on request | [ADR-0005](adr/0005-map-on-request.md), accepted: MapLibre and OpenFreeMap, loaded on request | E4.6 |
 
 ## Small decisions
 

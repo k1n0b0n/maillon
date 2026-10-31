@@ -2,6 +2,7 @@
 import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
 import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
+import { optionName } from '../ui/options.ts';
 
 interface Props {
   card: Card;
@@ -9,13 +10,6 @@ interface Props {
   destination: string;
   folding: boolean;
 }
-
-const NAMES: Record<CardKind, string> = {
-  walk: 'À pied',
-  bike: 'À vélo',
-  transit: 'Transports en commun',
-  transitBike: 'Transports avec votre vélo',
-};
 
 const STEPS: Record<CardKind, string> = {
   walk: 'Étapes à pied',
@@ -34,7 +28,7 @@ const MISSING: Record<CardKind, string> = {
 const { card, origin, destination, folding } = Astro.props;
 const { kind, itinerary } = card;
 const transit = kind === 'transit' || kind === 'transitBike';
-const name = kind === 'transitBike' && folding ? 'Transports avec votre vélo pliant' : NAMES[kind];
+const name = optionName(kind, folding);
 const notes =
   kind === 'transitBike' && itinerary !== undefined
     ? folding

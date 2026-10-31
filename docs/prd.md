@@ -110,8 +110,8 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 
 ### E4.6 Map on request
 
-- Given a route detail, when the person asks for the map, then the route is drawn on it; until then, no map code or tile is loaded.
-- Given the map is open, then it closes with the keyboard and the text detail stays on the page.
+- Given the results, when the person asks for the map, then every itinerary found is drawn on it, each told apart by more than its colour; until then, no map code or tile is loaded.
+- Given the map is open, then it closes with the keyboard and the text stays on the page.
 
 ### E1.3 Accessibility, budgets and speed in CI
 

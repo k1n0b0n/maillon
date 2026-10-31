@@ -28,7 +28,7 @@ Everything runs in Docker; nothing else is needed on the host.
 | Build a release of the engine's data and restart the engine on it (the first run takes about a minute) | `sh scripts/refresh-data.sh` |
 | Golden routes on the frozen dataset (`golden/routes.yaml`) | `sh scripts/golden.sh` |
 | Rebuild the frozen dataset from the last downloads | `sh scripts/freeze-dataset.sh 2026-10-27` |
-| Add a dependency | `docker compose run --rm --no-deps app npm install <package>` |
+| Add a dependency, or switch to a branch with another lock file: every `app` command reinstalls under the running dev server, so restart it | `docker compose run --rm --no-deps app npm install <package>`, then `docker compose restart app` |
 | Build and smoke-test the production image | `docker build --target production -t maillon-app -f docker/app/Dockerfile .`, run it, then `sh scripts/smoke.sh http://localhost:4321` |
 
 ## Code rules
