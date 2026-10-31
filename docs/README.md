@@ -67,8 +67,8 @@ A process rule changes at a retro, as an experiment with a hypothesis, a measure
 
 Replaced at the end of every session. Five items, 12 lines at most.
 
-- **Milestone:** M0, 4 of 6 stories done.
-- **Current story:** 004, E2.3 golden routes in CI, in review.
+- **Milestone:** M0, 5 of 6 stories done.
+- **Current story:** 005, E3.1 first search, in review.
 - **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app; run the `osm` workflow once to create `osm-gironde`.
-- **Next:** E3.1 first search; E1.2 delivery needs the maintainer on the server.
+- **Next:** E1.2 delivery, which needs the maintainer on the server; meanwhile M1's E4.2 and E4.3, the comparison.
 - **Blockers:** none.

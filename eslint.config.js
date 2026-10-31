@@ -8,5 +8,6 @@ export default defineConfig(
   js.configs.recommended,
   tseslint.configs.strict,
   astro.configs.recommended,
-  { rules: { 'no-console': 'error' } },
+  // Debug output never ships; errors go to the container's logs.
+  { rules: { 'no-console': ['error', { allow: ['error'] }] } },
 );
