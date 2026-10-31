@@ -68,3 +68,13 @@
   bike: none
   expect:
     never: [bike]
+
+- id: GR8
+  title: Gare Saint-Jean → Thenon, by TER towards Périgueux and Brive
+  from: 44.82577,-0.55681
+  to: 45.13830,1.07110
+  at: 2026-10-27T10:30:00+01:00
+  option: transitBike
+  expect:
+    some: train
+    never: [bus]

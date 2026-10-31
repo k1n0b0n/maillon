@@ -1,10 +1,8 @@
 import { createWriteStream, existsSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
+import type { Coordinates } from '../../domain/itinerary.ts';
 import { csvLine, header, rows } from './feed.ts';
-
-/** Longitude and latitude bounds: west, south, east, north. */
-export type Bbox = [number, number, number, number];
 
 type Row = Record<string, string>;
 
@@ -54,27 +52,29 @@ async function activeServices(input: string, day: string): Promise<Set<string>> 
 }
 
 /**
- * Keeps one service day of a feed, and with `bbox` only the trips that stop inside it, for a small frozen dataset:
+ * Keeps one service day of a feed, and with `inArea` only the trips that stop in it, for a small frozen dataset:
  * the calendars and feed_info then cover that day alone, and shapes are dropped.
  */
-export async function freezeDay(input: string, output: string, day: string, bbox?: Bbox): Promise<number> {
+export async function freezeDay(
+  input: string,
+  output: string,
+  day: string,
+  inArea?: (stop: Coordinates) => boolean,
+): Promise<number> {
   await mkdir(output, { recursive: true });
   const date = day.replaceAll('-', '');
   const services = await activeServices(input, day);
   const inside = new Set<string>();
-  if (bbox !== undefined) {
-    const [west, south, east, north] = bbox;
+  if (inArea !== undefined) {
     for await (const stop of rows(join(input, 'stops.txt'))) {
-      const lat = Number(stop['stop_lat']);
-      const lon = Number(stop['stop_lon']);
-      if (lon >= west && lon <= east && lat >= south && lat <= north) inside.add(stop['stop_id'] ?? '');
+      if (inArea({ lat: Number(stop['stop_lat']), lon: Number(stop['stop_lon']) })) inside.add(stop['stop_id'] ?? '');
     }
   }
   const trips = new Map<string, string>();
   for await (const trip of rows(join(input, 'trips.txt'))) {
     if (services.has(trip['service_id'] ?? '')) trips.set(trip['trip_id'] ?? '', trip['route_id'] ?? '');
   }
-  if (bbox !== undefined) {
+  if (inArea !== undefined) {
     const touching = new Set<string>();
     for await (const stopTime of rows(join(input, 'stop_times.txt'))) {
       if (inside.has(stopTime['stop_id'] ?? '')) touching.add(stopTime['trip_id'] ?? '');
