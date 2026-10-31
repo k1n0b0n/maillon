@@ -36,6 +36,9 @@ export interface Itinerary {
   legs: Leg[];
 }
 
+/** A folded bike rides every vehicle, the bus included. */
+export type Bike = 'none' | 'classic' | 'folding';
+
 /** The four options of the comparison screen; `transitBike` holds the folding bike's options when asked. */
 export interface Comparison {
   walk?: Itinerary;
@@ -51,7 +54,7 @@ export interface PlanQuery {
   to: Coordinates;
   time: Date;
   arriveBy: boolean;
-  folding: boolean;
+  bike: Bike;
 }
 
 export function isTransit(leg: Leg): boolean {

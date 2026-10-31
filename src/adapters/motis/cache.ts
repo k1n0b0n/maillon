@@ -6,8 +6,8 @@ const MAX_ENTRIES = 200;
 
 const entries = new Map<string, { expires: number; comparison: Promise<Comparison> }>();
 
-function key({ from, to, time, arriveBy, folding }: PlanQuery): string {
-  return [from.lat.toFixed(5), from.lon.toFixed(5), to.lat.toFixed(5), to.lon.toFixed(5), time.toISOString(), arriveBy, folding].join('|');
+function key({ from, to, time, arriveBy, bike }: PlanQuery): string {
+  return [from.lat.toFixed(5), from.lon.toFixed(5), to.lat.toFixed(5), to.lon.toFixed(5), time.toISOString(), arriveBy, bike].join('|');
 }
 
 /**

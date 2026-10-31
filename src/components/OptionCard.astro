@@ -1,7 +1,7 @@
 ---
 import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
-import { isTransit } from '../domain/itinerary.ts';
+import { type Bike, isTransit } from '../domain/itinerary.ts';
 import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
 import { cardModes, optionName } from '../ui/options.ts';
 import Icon from './Icon.astro';
@@ -10,7 +10,7 @@ interface Props {
   card: Card;
   origin: string;
   destination: string;
-  folding: boolean;
+  bike: Bike;
   /** The first option found, which the list sorts by arrival. */
   first: boolean;
 }
@@ -29,13 +29,13 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination, folding, first } = Astro.props;
+const { card, origin, destination, bike, first } = Astro.props;
 const { kind, itinerary } = card;
 const transit = kind === 'transit' || kind === 'transitBike';
-const name = optionName(kind, folding);
+const name = optionName(kind, bike);
 const notes =
   kind === 'transitBike' && itinerary !== undefined
-    ? folding
+    ? bike === 'folding'
       ? ['Vélo plié : accepté dans tous les transports s’il est peu encombrant.']
       : rulesMet(itinerary).flatMap(({ vehicle, rule }) => bikeNote(vehicle, rule) ?? [])
     : [];

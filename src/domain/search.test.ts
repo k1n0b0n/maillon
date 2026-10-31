@@ -5,25 +5,36 @@ describe('parseSearch', () => {
   it('reads a complete search from the URL', () => {
     const parsed = parseSearch(new URLSearchParams('de=Gare+Saint-Jean&a=Place+de+la+Bourse'));
 
-    expect(parsed).toEqual({ complete: true, search: { from: 'Gare Saint-Jean', to: 'Place de la Bourse', folding: false } });
+    expect(parsed).toEqual({ complete: true, search: { from: 'Gare Saint-Jean', to: 'Place de la Bourse', bike: 'classic' } });
   });
 
   it('lists the missing places and keeps what was typed', () => {
     const parsed = parseSearch(new URLSearchParams('de=Pessac&a=+++'));
 
-    expect(parsed).toEqual({ complete: false, values: { from: 'Pessac', to: '', folding: false }, missing: ['to'] });
+    expect(parsed).toEqual({ complete: false, values: { from: 'Pessac', to: '', bike: 'classic' }, missing: ['to'] });
   });
 
-  it('reads the folding bike', () => {
-    const parsed = parseSearch(new URLSearchParams('de=Pessac&a=Bourse&velo=pliant'));
+  it('reads no bike, a bike or a folding bike', () => {
+    const bike = (velo: string) => {
+      const parsed = parseSearch(new URLSearchParams({ de: 'Pessac', a: 'Bourse', velo }));
+      return parsed.complete && parsed.search.bike;
+    };
 
-    expect(parsed.complete && parsed.search.folding).toBe(true);
+    expect(bike('aucun')).toBe('none');
+    expect(bike('classique')).toBe('classic');
+    expect(bike('pliant')).toBe('folding');
+  });
+
+  it('reads a bike from a link shared before the choice, with no bike or an unknown one', () => {
+    const parsed = parseSearch(new URLSearchParams('de=Pessac&a=Bourse&velo=tandem'));
+
+    expect(parsed.complete && parsed.search.bike).toBe('classic');
   });
 
   it('keeps the coordinates of a chosen place', () => {
     const parsed = parseSearch(new URLSearchParams('de=Ma+position&dep=44.8,-0.6&a=Bourse&arr=nowhere'));
 
-    expect(parsed.complete && parsed.search).toEqual({ from: 'Ma position', to: 'Bourse', folding: false, fromAt: { lat: 44.8, lon: -0.6 } });
+    expect(parsed.complete && parsed.search).toEqual({ from: 'Ma position', to: 'Bourse', bike: 'classic', fromAt: { lat: 44.8, lon: -0.6 } });
   });
 
   it('reads the time searched, and ignores one that is not a date', () => {

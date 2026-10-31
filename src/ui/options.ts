@@ -1,7 +1,7 @@
 import type { Card, CardKind } from '../domain/comparison.ts';
-import { isTransit, type Mode } from '../domain/itinerary.ts';
+import { type Bike, isTransit, type Mode } from '../domain/itinerary.ts';
 
-export function optionName(kind: CardKind, folding: boolean): string {
+export function optionName(kind: CardKind, bike: Bike): string {
   switch (kind) {
     case 'walk':
       return 'À pied';
@@ -10,7 +10,7 @@ export function optionName(kind: CardKind, folding: boolean): string {
     case 'transit':
       return 'Transports en commun';
     case 'transitBike':
-      return folding ? 'Transports avec votre vélo pliant' : 'Transports avec votre vélo';
+      return bike === 'folding' ? 'Transports avec votre vélo pliant' : 'Transports avec votre vélo';
   }
 }
 

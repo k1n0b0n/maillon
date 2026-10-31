@@ -29,6 +29,7 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 | GR4 | Lormont Bas → La Cité du Vin, a Tuesday at 10:30 | Transit + bike | Le Bato is proposed |
 | GR5 | Pessac → Gare Saint-Jean, a Tuesday at 10:30 | Transit + bike | A TER leg is proposed |
 | GR6 | GR1 with a folding bike | Transit + folding bike | A bus leg is proposed |
+| GR7 | GR3 without a bike | Transit | No bike leg |
 
 ## M0: skeleton online
 
@@ -120,6 +121,13 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 - Given the search form on a phone, then every field, button and checkbox is at least 44 px high, and the folding bike choice says what it changes.
 - Given the home page, then one sentence before the form says what maillon compares, the bike on board included.
 - Given a 320 px width, 200 % zoom, light or dark mode, then nothing scrolls sideways and text and controls keep AA contrast.
+
+### E4.8 No bike, a bike or a folding bike
+
+- Given the search form, then the person chooses no bike, a bike or a folding bike in one group, a bike by default.
+- Given no bike, then only walking and transit are compared, and no bike option is shown.
+- Given a folding bike, then transit with the bike allows the bus.
+- Given a search URL shared before this choice existed, then it gives the same results.
 
 ### E1.3 Accessibility, budgets and speed in CI
 
