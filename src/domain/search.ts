@@ -1,6 +1,12 @@
+import { parseCoordinates } from './area.ts';
+import type { Coordinates } from './itinerary.ts';
+
 export interface SearchForm {
   from: string;
   to: string;
+  /** Set when a suggestion or the person's position was chosen: no need to look the name up again. */
+  fromAt?: Coordinates;
+  toAt?: Coordinates;
   /** A folded bike rides every vehicle, the bus included. */
   folding: boolean;
 }
@@ -17,9 +23,17 @@ function field(params: URLSearchParams, name: string): string {
   return (params.get(name) ?? '').trim().slice(0, MAX_LENGTH);
 }
 
-/** Reads a search from its URL: `de`, `a` and `velo`, the French names the form submits. */
+/** Reads a search from its URL: `de`, `a`, `dep`, `arr` and `velo`, the French names the form submits. */
 export function parseSearch(params: URLSearchParams): ParsedSearch {
-  const values: SearchForm = { from: field(params, 'de'), to: field(params, 'a'), folding: params.get('velo') === 'pliant' };
+  const fromAt = parseCoordinates(params.get('dep'));
+  const toAt = parseCoordinates(params.get('arr'));
+  const values: SearchForm = {
+    from: field(params, 'de'),
+    to: field(params, 'a'),
+    folding: params.get('velo') === 'pliant',
+    ...(fromAt && { fromAt }),
+    ...(toAt && { toAt }),
+  };
   const missing = (['from', 'to'] as const).filter((name) => values[name] === '');
   return missing.length === 0 ? { complete: true, search: values } : { complete: false, values, missing };
 }

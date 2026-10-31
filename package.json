@@ -6,16 +6,18 @@
     "node": ">=24"
   },
   "scripts": {
-    "dev": "astro dev --host 0.0.0.0",
+    "dev": "astro dev --host 0.0.0.0 --ignore-lock",
     "build": "astro build",
     "start": "node dist/server/entry.mjs",
-    "check": "astro check --minimumSeverity warning && eslint . && depcruise src && vitest run",
+    "check": "astro check --minimumSeverity warning && vue-tsc --noEmit && eslint . && depcruise src && vitest run",
     "golden": "vitest run --config golden/vitest.config.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.9",
+    "@astrojs/vue": "^7.1.2",
     "astro": "^7.4.2",
-    "csv-parse": "^7.0.3"
+    "csv-parse": "^7.0.3",
+    "vue": "^3.5.44"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
@@ -24,9 +26,12 @@
     "dependency-cruiser": "^18.7.0",
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
+    "eslint-plugin-vue": "^10.12.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.5",
+    "vue-eslint-parser": "^10.4.1",
+    "vue-tsc": "^3.3.13",
     "yaml": "^2.9.1"
   }
 }

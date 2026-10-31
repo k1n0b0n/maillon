@@ -20,6 +20,12 @@ describe('parseSearch', () => {
     expect(parsed.complete && parsed.search.folding).toBe(true);
   });
 
+  it('keeps the coordinates of a chosen place', () => {
+    const parsed = parseSearch(new URLSearchParams('de=Ma+position&dep=44.8,-0.6&a=Bourse&arr=nowhere'));
+
+    expect(parsed.complete && parsed.search).toEqual({ from: 'Ma position', to: 'Bourse', folding: false, fromAt: { lat: 44.8, lon: -0.6 } });
+  });
+
   it('cuts a place name at 200 characters', () => {
     const parsed = parseSearch(new URLSearchParams({ de: 'x'.repeat(500), a: 'Pessac' }));
 

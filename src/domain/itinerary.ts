@@ -10,6 +10,13 @@ export interface Place {
   coordinates: Coordinates;
 }
 
+export interface Suggestion extends Place {
+  kind: 'stop' | 'address' | 'place';
+  town?: string;
+  /** What stops there, for a stop: tells La Cité du Vin of the tram from the one of Le Bato. */
+  modes: Mode[];
+}
+
 export interface Leg {
   mode: Mode;
   from: string;
