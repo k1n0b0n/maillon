@@ -1,0 +1,29 @@
+name: OSM
+
+# Clips the Gironde out of Geofabrik's Aquitaine each week and publishes it for the pipeline (ADR-0004):
+# osmium needs 4 GB to keep the ways whole, more than the server can spare.
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clip:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+      - run: curl -sfL -o aquitaine.osm.pbf https://download.geofabrik.de/europe/france/aquitaine-latest.osm.pbf
+      - run: osmium extract --strategy complete_ways --bbox -1.27,44.19,0.32,45.58 aquitaine.osm.pbf --output gironde.osm.pbf
+      - name: Publish
+        run: |
+          gh release view osm-gironde > /dev/null 2>&1 || gh release create osm-gironde --latest=false \
+            --title "OpenStreetMap, Gironde" \
+            --notes "The Gironde's bounding box clipped from Geofabrik's Aquitaine each week, for the data pipeline. © OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright"
+          gh release upload osm-gironde gironde.osm.pbf --clobber

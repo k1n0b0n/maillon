@@ -10,8 +10,8 @@ browser ── GET /trajet?de=…&a=…&quand=…&velo=… ──► app (Astro 
                                                   ├─ adapters/motis    ──► motis (container)
                                                   ├─ adapters/geocoder ──► motis (ADR-0001)
                                                   └─ in-memory LRU cache (~60 s)
-pipeline (nightly job): TBM GTFS + SNCF GTFS + OSM Gironde → validation → bike rules applied to bikes_allowed
-                        → engine import → atomic switch → smoke test
+pipeline (nightly job): TBM GTFS + SNCF GTFS + OSM Gironde (clipped weekly in CI) → validation
+                        → bike rules applied to bikes_allowed → engine import → atomic switch → engine restart
 ```
 
 - **Domain and adapters.** `domain/` holds the rules and never imports `adapters/`; only the adapters know the engine's and the geocoder's APIs. dependency-cruiser enforces the boundary, proven once by a deliberate violation (E1.1).
@@ -29,7 +29,7 @@ Numbered in the order they are written.
 | Application stack | [ADR-0002](adr/0002-application-stack.md), accepted: Astro SSR, Vue 3 islands, TypeScript strict | E1.1 |
 | Responsible design | [ADR-0003](adr/0003-responsible-design.md), accepted: budgets in CI, a manual audit per milestone, honest statements | E1.1 |
 | Hosting and delivery | balise's final state: GHCR images, SSH deploy with a forced command, the host's nginx, release-please | E1.2 |
-| Data pipeline and bike rules | As in the overview | E2.2 |
+| Data pipeline and bike rules | [ADR-0004](adr/0004-data-pipeline.md), accepted: nightly releases, OSM clipped in CI | E2.2 |
 
 ## Small decisions
 
