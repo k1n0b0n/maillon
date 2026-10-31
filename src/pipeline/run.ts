@@ -1,8 +1,9 @@
-import { link, mkdir, rm } from 'node:fs/promises';
+import { cp, link, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { type FeedSummary, ReleaseStore } from '../adapters/data/releases.ts';
 import { download } from '../adapters/data/sources.ts';
-import { extract, feedEnd, readTrips, type VehicleSource, writeBikesAllowed } from '../adapters/gtfs/feed.ts';
+import { checkFeed, extract, feedEnd, readTrips, type VehicleSource, writeBikesAllowed } from '../adapters/gtfs/feed.ts';
 import { importTimetables } from '../adapters/motis/import.ts';
 import { takesBikes } from '../domain/bike-rules.ts';
 import { coveredDays, lostTrips } from '../domain/release.ts';
@@ -42,10 +43,16 @@ async function prepareFeed(
   downloads: string,
   tripsBefore: number | undefined,
 ): Promise<FeedSummary> {
-  const zip = join(downloads, `${feed.id}.gtfs.zip`);
-  log(`${feed.id}: ${await download(feed.url, zip)}`);
   const gtfs = join(dir, feed.id);
-  await extract(zip, gtfs);
+  if (feed.url.startsWith('file:')) {
+    // A folder, as the golden routes' frozen dataset keeps its feeds.
+    await cp(fileURLToPath(feed.url), gtfs, { recursive: true });
+    checkFeed(gtfs);
+  } else {
+    const zip = join(downloads, `${feed.id}.gtfs.zip`);
+    log(`${feed.id}: ${await download(feed.url, zip)}`);
+    await extract(zip, gtfs);
+  }
   const { end, version } = await feedEnd(gtfs);
   const { vehicles, spans } = await readTrips(gtfs, feed.vehicles);
   const counts = await writeBikesAllowed(gtfs, (tripId) => {

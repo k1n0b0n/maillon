@@ -9,7 +9,8 @@
     "dev": "astro dev --host 0.0.0.0",
     "build": "astro build",
     "start": "node dist/server/entry.mjs",
-    "check": "astro check --minimumSeverity warning && eslint . && depcruise src && vitest run"
+    "check": "astro check --minimumSeverity warning && eslint . && depcruise src && vitest run",
+    "golden": "vitest run --config golden/vitest.config.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.9",
@@ -25,6 +26,7 @@
     "eslint-plugin-astro": "^3.2.1",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1",
-    "vitest": "^5.0.5"
+    "vitest": "^5.0.5",
+    "yaml": "^2.9.1"
   }
 }

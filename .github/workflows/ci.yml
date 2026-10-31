@@ -67,14 +67,25 @@ jobs:
         with:
           persist-credentials: false
       - run: docker build --target production -t maillon-app:ci -f docker/app/Dockerfile .
-      - run: docker compose --profile pipeline build pipeline
       - run: docker run -d --name app -p 4321:4321 maillon-app:ci
       - run: sh scripts/smoke.sh http://localhost:4321
       - if: failure()
         run: docker logs app
 
+  # The bike rules, the pipeline and the engine together, on the frozen dataset (E2.3).
+  golden:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: sh scripts/golden.sh
+
   ci:
-    needs: [changes, checks, image]
+    needs: [changes, checks, image, golden]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 2
