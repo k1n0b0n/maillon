@@ -1,6 +1,6 @@
 # Project brief
 
-> Status: agreed on 2026-10-26. One page at most.
+> Status: agreed on 2026-10-26; the area widened to Nouvelle-Aquitaine on 2026-10-31. One page at most.
 
 ## Problem
 
@@ -12,7 +12,7 @@ One form, one screen. From a place to a place, now or at a chosen time over the 
 
 ## Audience
 
-1. People in Bordeaux Métropole who own a bike and use TBM, mostly on a phone and often in a hurry.
+1. People in Bordeaux Métropole who own a bike and use TBM, mostly on a phone and often in a hurry. Their trips also leave the métropole: by TER, regional coach or another city's network across Nouvelle-Aquitaine.
 2. People reading the public repository. No extra showcase work is done for them.
 
 ## Value: simplicity, measured
@@ -28,16 +28,23 @@ One form, one screen. From a place to a place, now or at a chosen time over the 
 - Walk, bike, transit, transit + bike, and a folding bike option that allows the bus.
 - Step-by-step text; the best option's map with the results, the others on request.
 - Real-time delays for departures in the near future (M2).
+- Nouvelle-Aquitaine: its TER, regional coaches, city networks and boats (M2).
 
 ## Out of scope for the MVP
 
-Accounts, anything stored on a server for a person, bike sharing (V³), bike parking, traffic alerts, mobile apps, cities other than Bordeaux. They wait in the PRD's *Later* section.
+Accounts, anything stored on a server for a person, bike sharing (V³), bike parking, traffic alerts, mobile apps, regions other than Nouvelle-Aquitaine. They wait in the PRD's *Later* section.
 
 ## Data facts (checked on 2026-10-26)
 
 - TBM GTFS: valid from 2026-10-24 to 2027-01-22, updated daily. `bikes_allowed` is 0 for all 15,210 tram trips and 51,768 bus trips, and 1 for the 1,556 Bato trips (lines 951 to 953).
 - TBM rules: no bikes on the tram from 7 to 9 am and from 4 to 7 pm, every day, allowed otherwise "if crowding allows"; no bikes on buses unless folded; 6 bikes per boat on Le Bato (Bordeaux Métropole; another TBM page said 10).
 - The TBM feed has no trains: the SNCF GTFS (ODbL) is needed. It has no `bikes_allowed` column at all. TER Nouvelle-Aquitaine takes bikes for free outside summer, with a €3 bike ticket on 11 lines from 1 May to 27 September.
+
+## Data facts for Nouvelle-Aquitaine (checked on 2026-10-31)
+
+- Nouvelle-Aquitaine Mobilités publishes one GTFS for 49 operators (ODbL, with transport.data.gouv.fr's special terms): city buses, the regional coaches of the 12 departments, 9 boat lines, and TBM again; not the TER. Every route is a bus or a boat (`route_type` 3 or 4), every trip says "no information" about bikes, and there is no `feed_info.txt`.
+- Regional coaches take a bike only on some lines, booked by the day before in the CarVélo app, in limited places, e-bikes refused (transports.nouvelle-aquitaine.fr).
+- Thenon has a TER halt on Bordeaux–Périgueux–Brive, and coach 336 (Sarlat–Montignac–Périgueux) stops there.
 
 ## Success criteria
 

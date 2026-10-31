@@ -13,9 +13,9 @@ The three simplicity measures of the brief: at most 3 interactions to the first 
 | NFR1 | RGAA 4.1.2 AA on the main path: search, results, route detail | axe in CI with no violation; at each milestone, a manual check with the keyboard, VoiceOver, 200 % zoom and a 320 px width | M1 |
 | NFR2 | RGESN: the search and results pages work without JavaScript and stay under 50 kB of compressed JavaScript and 200 kB transferred, the map excluded | Budget check in CI | M1 |
 | NFR3 | A search answers in under 2 s at p95 | CI on the golden routes, then production | M1 |
-| NFR4 | The timetables served are less than 48 h old | After every deploy, and each night | M0 |
+| NFR4 | The timetables served are less than 48 h old; a regional network's, at most 7 days while its feed is broken (E2.5) | After every deploy, and each night | M0 |
 | NFR5 | Production runs the very image tested in CI, and a smoke test follows every deploy | CI and the deploy workflow | M0 |
-| NFR6 | Every page credits OpenStreetMap (ODbL), TBM and SNCF | Test | M0 |
+| NFR6 | Every page credits OpenStreetMap (ODbL), TBM and SNCF; from E2.5, Nouvelle-Aquitaine Mobilités (ODbL) too, with a page that lists every network's producer | Test | M0 |
 
 ## Golden routes
 
@@ -30,6 +30,9 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 | GR5 | Pessac → Gare Saint-Jean, a Tuesday at 10:30 | Transit + bike | A TER leg is proposed |
 | GR6 | GR1 with a folding bike | Transit + folding bike | A bus leg is proposed |
 | GR7 | GR3 without a bike | Transit | No bike leg |
+| GR8 | Gare Saint-Jean → Thenon, a Tuesday at 10:30 | Transit + bike | A TER leg is proposed, no bus leg |
+| GR9 | Gare de Périgueux → Thenon, a Tuesday at 8:40 | Transit | A coach leg is proposed |
+| GR10 | Gare de Périgueux → Boulazac, a Tuesday at 10:30 | Transit | A bus leg is proposed |
 
 ## M0: skeleton online
 
@@ -147,7 +150,31 @@ Changes E4.6: the map loads with the results and draws one option at a time.
 
 ## M2: trust and launch
 
-Criteria are written at the M1 retro.
+Criteria are written at the M1 retro, except for E2.4 to E2.6, planned early by the maintainer's decision on 2026-10-31.
+
+### E2.4 Nouvelle-Aquitaine covered
+
+- Given two places in Nouvelle-Aquitaine, when a person searches, then the options are compared on the region's streets and trains, the TER with the bike included.
+- Given a place outside Nouvelle-Aquitaine, then a message says that maillon covers Nouvelle-Aquitaine, and no search runs.
+- Given the region's data, then a search still answers within NFR3.
+
+### E2.5 Every network in Nouvelle-Aquitaine
+
+- Given the networks that Nouvelle-Aquitaine Mobilités publishes, then a search uses the region's city buses, regional coaches and boats, and no TBM trip counts twice.
+- Given a regional coach, then its steps call it a coach and it takes only a folded bike, as a sourced and dated rule says.
+- Given a city bus anywhere in the region, then it takes only a folded bike, unless a sourced rule for its network says otherwise.
+- Given a boat other than Le Bato, then it takes a bike only where a sourced rule says so.
+- Given the regional feed fails validation, then the other feeds' new data is served with the regional feed's last good version, and the maintainer is alerted.
+
+### E2.6 Data built in CI
+
+Changes E2.2: the data is built in CI, and the server only receives it.
+
+- Given the nightly build, when every download passes validation and a search finds a TER with the bike, then the server serves the new data with no interruption.
+- Given a build fails, or the data served gets older than 48 h, then the server keeps the previous data and the maintainer is alerted.
+- Given the build, then the server receives only the engine's data, through a key that can do nothing else, and the data is never published elsewhere.
+- Given bad data, when the maintainer asks for a rollback, then the previous data serves again after one command.
+- Given no commit for 60 days, then the nightly build still runs.
 
 - E5.1 Real-time delays from the TBM trip updates (GTFS-RT) for departures in the near future.
 - E5.2 "Ce trajet vous semble faux ?": a prefilled issue holding the search URL, turned into a golden route.
