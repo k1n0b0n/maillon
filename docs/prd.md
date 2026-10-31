@@ -156,6 +156,7 @@ Criteria are written at the M1 retro, except for E2.4 to E2.6, planned early by 
 
 - Given two places in Nouvelle-Aquitaine, when a person searches, then the options are compared on the region's streets and trains, the TER with the bike included.
 - Given a place outside Nouvelle-Aquitaine, then a message says that maillon covers Nouvelle-Aquitaine, and no search runs.
+- Given a place more than 15 minutes' walk from any stop, when transit finds nothing nearer, then transit walks up to an hour to or from a stop; where a stop is nearer, nothing changes.
 - Given the region's data, then a search still answers within NFR3.
 
 ### E2.5 Every network in Nouvelle-Aquitaine
