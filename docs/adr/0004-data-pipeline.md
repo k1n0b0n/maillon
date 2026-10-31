@@ -1,6 +1,6 @@
 # ADR-0004: Data pipeline and bike rules
 
-- **Status:** Accepted
+- **Status:** Accepted; the import on the server and the Gironde's clip superseded by ADR-0008 (data built in CI) and ADR-0007 (Nouvelle-Aquitaine)
 - **Date:** 2026-10-26
 
 ## Context
