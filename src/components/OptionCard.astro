@@ -1,14 +1,18 @@
 ---
 import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
+import { isTransit } from '../domain/itinerary.ts';
 import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
-import { optionName } from '../ui/options.ts';
+import { cardModes, optionName } from '../ui/options.ts';
+import Icon from './Icon.astro';
 
 interface Props {
   card: Card;
   origin: string;
   destination: string;
   folding: boolean;
+  /** The first option found, which the list sorts by arrival. */
+  first: boolean;
 }
 
 const STEPS: Record<CardKind, string> = {
@@ -25,7 +29,7 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination, folding } = Astro.props;
+const { card, origin, destination, folding, first } = Astro.props;
 const { kind, itinerary } = card;
 const transit = kind === 'transit' || kind === 'transitBike';
 const name = optionName(kind, folding);
@@ -37,18 +41,22 @@ const notes =
     : [];
 ---
 
-<li class="card">
-  <h2>{name}</h2>
+<li class:list={['card', { empty: itinerary === undefined }]}>
+  <h2>
+    <span class="modes">{cardModes(card).map((mode) => <Icon name={mode} />)}</span>
+    {name}
+  </h2>
   {
     itinerary ? (
       <>
-        <p>
-          <strong>
-            Arrivée à <time datetime={itinerary.arrival.toISOString()}>{clock(itinerary.arrival)}</time>
-          </strong>
-          , {duration(itinerary.departure, itinerary.arrival)}
-          {transit && `, ${changes(itinerary)}`}. Départ à{' '}
-          <time datetime={itinerary.departure.toISOString()}>{clock(itinerary.departure)}</time>.
+        {first && <p class="first">Arrive en premier</p>}
+        <p class="arrival">
+          Arrivée <time datetime={itinerary.arrival.toISOString()}>{clock(itinerary.arrival)}</time>
+        </p>
+        <p class="facts">
+          {duration(itinerary.departure, itinerary.arrival)}
+          {transit && `, ${changes(itinerary)}`}, départ à{' '}
+          <time datetime={itinerary.departure.toISOString()}>{clock(itinerary.departure)}</time>
         </p>
         {notes.length > 0 && (
           <ul class="notes">
@@ -59,34 +67,168 @@ const notes =
         )}
         <details>
           <summary>{STEPS[kind]}</summary>
-          <ol>
-            {itinerary.legs.map((leg) => (
-              <li>{step(leg, origin, destination)}</li>
-            ))}
+          <ol class="steps">
+            {itinerary.legs.map((leg) => {
+              const { vehicle, line, towards, detail } = step(leg, origin, destination);
+              return (
+                <li class:list={{ ride: isTransit(leg) }}>
+                  <span class="mode">
+                    <Icon name={leg.mode} />
+                  </span>
+                  <p>
+                    <strong>
+                      {vehicle} {line && <span class="line">{line}</span>} {towards}
+                    </strong>
+                    <span class="detail">{detail}</span>
+                  </p>
+                </li>
+              );
+            })}
           </ol>
         </details>
       </>
     ) : (
-      <p>{MISSING[kind]}</p>
+      <p class="missing">{MISSING[kind]}</p>
     )
   }
 </li>
 
 <style>
   .card {
-    margin: 1rem 0;
-    padding: 0 1rem;
-    border: 1px solid var(--muted);
-    border-radius: 0.5rem;
+    margin: 0.75rem 0;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .card.empty {
+    background: transparent;
+    border: 2px dashed var(--border);
   }
 
   h2 {
-    margin: 0.75rem 0 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .modes {
+    display: inline-flex;
+    gap: 0.25rem;
+    color: var(--accent);
+  }
+
+  .first {
+    display: inline-block;
+    margin: 0.5rem 0 0;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+  }
+
+  .arrival {
+    margin: 0.25rem 0 0;
     font-size: 1.125rem;
   }
 
+  .arrival time {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  .facts,
+  .missing {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .notes {
+    margin: 0.75rem 0 0;
+    padding: 0.25rem 0 0.25rem 0.75rem;
+    font-size: 0.9375rem;
+    list-style: none;
+    border-left: 4px solid var(--accent);
+  }
+
   summary {
-    margin-bottom: 0.75rem;
+    margin-top: 0.25rem;
+    padding: 0.625rem 0;
+    font-weight: 600;
+    color: var(--accent);
     cursor: pointer;
+  }
+
+  .steps {
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    column-gap: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  /* The rail between two steps: solid for a ride, dotted on foot or by bike, as on the map. */
+  .steps li:not(:last-child)::after {
+    position: absolute;
+    top: 2.25rem;
+    bottom: 0;
+    left: calc(1.125rem - 1.5px);
+    border-left: 3px dotted var(--control);
+    content: '';
+  }
+
+  .steps li.ride:not(:last-child)::after {
+    border-left-style: solid;
+    border-left-color: var(--accent);
+  }
+
+  .mode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--muted);
+    border: 2px solid var(--control);
+    border-radius: 50%;
+  }
+
+  .ride .mode {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .mode :global(.icon) {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .steps p {
+    margin: 0.25rem 0 0;
+  }
+
+  .line {
+    display: inline-block;
+    min-width: 1.75em;
+    padding: 0 0.375em;
+    text-align: center;
+    border: 2px solid currentColor;
+    border-radius: 0.375rem;
+  }
+
+  .detail {
+    display: block;
+    color: var(--muted);
   }
 </style>

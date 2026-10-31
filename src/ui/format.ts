@@ -14,21 +14,26 @@ const VEHICLES: Record<Mode, string> = {
   other: 'Transport',
 };
 
+/** A number and its unit never part at the end of a line: French typography, and narrow phones. */
+const NBSP = '\u00a0';
+
 export function clock(date: Date): string {
-  return CLOCK.format(date).replace(':', ' h ');
+  return CLOCK.format(date).replace(':', `${NBSP}h${NBSP}`);
 }
 
 export function duration(from: Date, to: Date): string {
   const minutes = Math.round((to.getTime() - from.getTime()) / 60_000);
   if (minutes < 60) {
-    return `${minutes} min`;
+    return `${minutes}${NBSP}min`;
   }
   const rest = minutes % 60;
-  return `${Math.floor(minutes / 60)} h${rest === 0 ? '' : ` ${String(rest).padStart(2, '0')}`}`;
+  return `${Math.floor(minutes / 60)}${NBSP}h${rest === 0 ? '' : `${NBSP}${String(rest).padStart(2, '0')}`}`;
 }
 
 export function distance(meters: number): string {
-  return meters < 1000 ? `${Math.max(10, Math.round(meters / 10) * 10)} m` : `${(meters / 1000).toFixed(1).replace('.', ',')} km`;
+  return meters < 1000
+    ? `${Math.max(10, Math.round(meters / 10) * 10)}${NBSP}m`
+    : `${(meters / 1000).toFixed(1).replace('.', ',')}${NBSP}km`;
 }
 
 export function changes(itinerary: Itinerary): string {
@@ -36,17 +41,28 @@ export function changes(itinerary: Itinerary): string {
   return count === 0 ? 'sans correspondance' : count === 1 ? '1 correspondance' : `${count} correspondances`;
 }
 
+/** A step of the route detail: its head names the mode, line and direction; its detail gives the stops and times. */
+export interface Step {
+  vehicle: string;
+  line?: string;
+  towards: string;
+  detail: string;
+}
+
 /** One step of the text detail; the engine leaves the search's two ends unnamed. */
-export function step(leg: Leg, origin: string, destination: string): string {
+export function step(leg: Leg, origin: string, destination: string): Step {
   const from = leg.from || origin;
   const to = leg.to || destination;
   if (leg.mode === 'walk' || leg.mode === 'bike') {
     const length = leg.distanceMeters === undefined ? '' : `, ${distance(leg.distanceMeters)}`;
-    return `${VEHICLES[leg.mode]} jusqu’à ${to} : ${duration(leg.departure, leg.arrival)}${length}.`;
+    return { vehicle: VEHICLES[leg.mode], towards: `jusqu’à ${to}`, detail: `${duration(leg.departure, leg.arrival)}${length}` };
   }
-  const vehicle = [VEHICLES[leg.mode], leg.line].filter(Boolean).join(' ');
-  const direction = leg.headsign ? ` direction ${leg.headsign}` : '';
-  return `${vehicle}${direction}, de ${from} à ${clock(leg.departure)} jusqu’à ${to} à ${clock(leg.arrival)}.`;
+  return {
+    vehicle: VEHICLES[leg.mode],
+    ...(leg.line ? { line: leg.line } : {}),
+    towards: leg.headsign ? `direction ${leg.headsign}` : `jusqu’à ${to}`,
+    detail: `Montez à ${from} à ${clock(leg.departure)}, descendez à ${to} à ${clock(leg.arrival)}`,
+  };
 }
 
 const RIDDEN: Record<Vehicle, string> = {
