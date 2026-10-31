@@ -6,7 +6,12 @@ Door-to-door trip planner for Bordeaux. It compares walking, cycling, public tra
 
 ## Run it
 
-With Docker only: `docker compose up -d`, then open http://localhost:4321. [AGENTS.md](AGENTS.md) lists the other commands.
+With Docker only:
+
+1. `sh scripts/refresh-data.sh` builds the engine's data from TBM, SNCF and OpenStreetMap: about 150 MB to download, a minute to import.
+2. `docker compose up -d`, then open http://localhost:4321.
+
+[AGENTS.md](AGENTS.md) lists the other commands.
 
 ## Why
 

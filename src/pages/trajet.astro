@@ -18,7 +18,7 @@ type Outcome =
 const parsed = parseSearch(Astro.url.searchParams);
 const values = parsed.complete ? parsed.search : parsed.values;
 
-async function search(texts: { from: string; to: string }): Promise<Outcome> {
+async function search(texts: { from: string; to: string; folding: boolean }): Promise<Outcome> {
   const [from, to] = await Promise.all([findPlace(MOTIS_URL, texts.from), findPlace(MOTIS_URL, texts.to)]);
   if (from === undefined || to === undefined) {
     return { kind: 'unknown', texts: [from ? undefined : texts.from, to ? undefined : texts.to].filter((text) => text !== undefined) };
@@ -28,7 +28,7 @@ async function search(texts: { from: string; to: string }): Promise<Outcome> {
     to: to.coordinates,
     time: new Date(),
     arriveBy: false,
-    folding: false,
+    folding: texts.folding,
   });
   return { kind: 'found', from, to, cards: cards(comparison) };
 }
@@ -64,7 +64,7 @@ const title =
         <p>Départ maintenant. Les options sont classées par heure d’arrivée.</p>
         <ol class="cards">
           {outcome.cards.map((card) => (
-            <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} />
+            <OptionCard card={card} origin={outcome.from.name} destination={outcome.to.name} folding={values.folding} />
           ))}
         </ol>
         <h2>Modifier la recherche</h2>

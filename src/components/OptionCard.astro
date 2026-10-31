@@ -1,11 +1,13 @@
 ---
+import { rulesMet } from '../domain/bike-rules.ts';
 import type { Card, CardKind } from '../domain/comparison.ts';
-import { changes, clock, duration, step } from '../ui/format.ts';
+import { bikeNote, changes, clock, duration, step } from '../ui/format.ts';
 
 interface Props {
   card: Card;
   origin: string;
   destination: string;
+  folding: boolean;
 }
 
 const NAMES: Record<CardKind, string> = {
@@ -29,13 +31,20 @@ const MISSING: Record<CardKind, string> = {
   transitBike: 'Aucun transport n’accepte votre vélo sur ce trajet dans les prochaines heures.',
 };
 
-const { card, origin, destination } = Astro.props;
+const { card, origin, destination, folding } = Astro.props;
 const { kind, itinerary } = card;
 const transit = kind === 'transit' || kind === 'transitBike';
+const name = kind === 'transitBike' && folding ? 'Transports avec votre vélo pliant' : NAMES[kind];
+const notes =
+  kind === 'transitBike' && itinerary !== undefined
+    ? folding
+      ? ['Vélo plié : accepté dans tous les transports s’il est peu encombrant.']
+      : rulesMet(itinerary).flatMap(({ vehicle, rule }) => bikeNote(vehicle, rule) ?? [])
+    : [];
 ---
 
 <li class="card">
-  <h2>{NAMES[kind]}</h2>
+  <h2>{name}</h2>
   {
     itinerary ? (
       <>
@@ -47,6 +56,13 @@ const transit = kind === 'transit' || kind === 'transitBike';
           {transit && `, ${changes(itinerary)}`}. Départ à{' '}
           <time datetime={itinerary.departure.toISOString()}>{clock(itinerary.departure)}</time>.
         </p>
+        {notes.length > 0 && (
+          <ul class="notes">
+            {notes.map((note) => (
+              <li>{note}</li>
+            ))}
+          </ul>
+        )}
         <details>
           <summary>{STEPS[kind]}</summary>
           <ol>

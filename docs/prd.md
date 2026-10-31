@@ -28,6 +28,7 @@ A golden route is a search (from, to, date and time, profile) with **expected pr
 | GR3 | The same at 10:30 | Transit + bike | A tram leg is proposed |
 | GR4 | Lormont Bas → La Cité du Vin, a Tuesday at 10:30 | Transit + bike | Le Bato is proposed |
 | GR5 | Pessac → Gare Saint-Jean, a Tuesday at 10:30 | Transit + bike | A TER leg is proposed |
+| GR6 | GR1 with a folding bike | Transit + folding bike | A bus leg is proposed |
 
 ## M0: skeleton online
 
