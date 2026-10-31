@@ -70,7 +70,7 @@ A process rule changes at a retro, as an experiment with a hypothesis, a measure
 Replaced at the end of every session. Five items, 12 lines at most.
 
 - **Milestone:** M0, 5 of 6 stories done; M1, 7 of 10, E4.4, E4.5 and E1.3 left; M2, 3 stories planned early: 013 in review, 014 and 015 to do.
-- **Current story:** in review: 013, E2.4 Nouvelle-Aquitaine covered (ADR-0007), stacked on #14. Planned: 014, E2.5 its networks; 015, E2.6 data built in CI (ADR-0008).
+- **Current story:** in review: 013, E2.4 Nouvelle-Aquitaine covered (ADR-0007), #17. Planned: 014, E2.5 its networks; 015, E2.6 data built in CI (ADR-0008).
 - **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app; run the `osm` workflow once to create `osm-area` (013); at each session, check whether triptix-tech/adr#32 (house numbers mapped by `associatedStreet`, motis#1113) is merged and in a MOTIS release, then bump the engine and search "36 rue Brémontier, Bordeaux".
 - **Next:** 014; E1.2 delivery, which needs the maintainer on the server, then 015; E4.4 when; E1.3 budgets in CI.
 - **Blockers:** none.
