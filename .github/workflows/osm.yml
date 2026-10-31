@@ -1,7 +1,7 @@
 name: OSM
 
-# Clips the Gironde out of Geofabrik's Aquitaine each week and publishes it for the pipeline (ADR-0004):
-# osmium needs 4 GB to keep the ways whole, more than the server can spare.
+# Merges Geofabrik's Aquitaine, Limousin and Poitou-Charentes into Nouvelle-Aquitaine each week and publishes it for
+# the pipeline (ADR-0007): a merge keeps every way whole and needs little memory, and the pipeline downloads one file.
 on:
   schedule:
     - cron: "17 3 * * 1"
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  clip:
+  merge:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
@@ -19,11 +19,22 @@ jobs:
       GH_REPO: ${{ github.repository }}
     steps:
       - run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
-      - run: curl -sfL -o aquitaine.osm.pbf https://download.geofabrik.de/europe/france/aquitaine-latest.osm.pbf
-      - run: osmium extract --strategy complete_ways --bbox -1.27,44.19,0.32,45.58 aquitaine.osm.pbf --output gironde.osm.pbf
+      - run: |
+          for region in aquitaine limousin poitou-charentes; do
+            curl -sfL -o "$region.osm.pbf" "https://download.geofabrik.de/europe/france/$region-latest.osm.pbf"
+          done
+      # Two snapshots would hold two versions of the objects on the regions' borders.
+      - name: One snapshot
+        run: |
+          stamps=$(for region in aquitaine limousin poitou-charentes; do
+            osmium fileinfo -g header.option.osmosis_replication_timestamp "$region.osm.pbf"
+          done | sort -u)
+          echo "$stamps"
+          [ "$(echo "$stamps" | wc -l)" -eq 1 ] || { echo "Geofabrik's regions are from different snapshots" >&2; exit 1; }
+      - run: osmium merge aquitaine.osm.pbf limousin.osm.pbf poitou-charentes.osm.pbf --output area.osm.pbf
       - name: Publish
         run: |
-          gh release view osm-gironde > /dev/null 2>&1 || gh release create osm-gironde --latest=false \
-            --title "OpenStreetMap, Gironde" \
-            --notes "The Gironde's bounding box clipped from Geofabrik's Aquitaine each week, for the data pipeline. © OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright"
-          gh release upload osm-gironde gironde.osm.pbf --clobber
+          gh release view osm-area > /dev/null 2>&1 || gh release create osm-area --latest=false \
+            --title "OpenStreetMap, Nouvelle-Aquitaine" \
+            --notes "Geofabrik's Aquitaine, Limousin and Poitou-Charentes merged each week, for the data pipeline. © OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright"
+          gh release upload osm-area area.osm.pbf --clobber

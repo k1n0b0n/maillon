@@ -33,7 +33,8 @@ services:
       dockerfile: docker/pipeline/Dockerfile
       args:
         MOTIS_IMAGE: *motis-image
-    mem_limit: 1600m
+    # Nouvelle-Aquitaine's import peaks near 3 GB (ADR-0007).
+    mem_limit: 4g
     environment:
       - PIPELINE_TODAY
       - TBM_GTFS_URL

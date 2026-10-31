@@ -15,6 +15,7 @@ interface MotisLeg {
   distance?: number;
   routeShortName?: string;
   headsign?: string;
+  tripTo?: MotisPlace;
   legGeometry?: { points: string; precision: number };
 }
 
@@ -35,7 +36,19 @@ const ENDS = new Set(['START', 'END']);
 /** The engine's own limit on a direct walk or ride: without it, MOTIS drops a walk over 30 minutes. */
 const MAX_DIRECT_SECONDS = 6 * 60 * 60;
 
+/**
+ * The walk to or from transit when the engine's 15 minutes find none, as for a village far from its halt (#15). Only
+ * then: in town, an hour lets the engine trade a bus for a long walk that arrives no sooner.
+ */
+const FALLBACK_WALK_TO_TRANSIT_SECONDS = 60 * 60;
+
+/** SNCF trains give their number as headsign: the trip's last stop says where they go. */
+function headsign(motis: MotisLeg): string | undefined {
+  return /^\d+$/.test(motis.headsign ?? '') ? motis.tripTo?.name : motis.headsign;
+}
+
 function leg(motis: MotisLeg): Leg {
+  const towards = headsign(motis);
   return {
     mode: MODES[motis.mode] ?? 'other',
     from: ENDS.has(motis.from.name) ? '' : motis.from.name,
@@ -44,7 +57,7 @@ function leg(motis: MotisLeg): Leg {
     arrival: new Date(motis.endTime),
     ...(motis.distance === undefined ? {} : { distanceMeters: Math.round(motis.distance) }),
     ...(motis.routeShortName ? { line: motis.routeShortName } : {}),
-    ...(motis.headsign ? { headsign: motis.headsign } : {}),
+    ...(towards ? { headsign: towards } : {}),
     ...(motis.legGeometry ? { path: decodePolyline(motis.legGeometry.points, motis.legGeometry.precision) } : {}),
   };
 }
@@ -79,7 +92,10 @@ async function request(baseUrl: string, query: PlanQuery, params: Record<string,
   }
 }
 
-/** Two requests: walk, bike and transit together, then transit with the bike on board (ADR-0001); without a bike, the first on foot only. */
+/**
+ * Two requests: walk, bike and transit together, then transit with the bike on board (ADR-0001); without a bike, the
+ * first on foot only. A third one walks farther to transit when the first finds none.
+ */
 export async function compare(baseUrl: string, query: PlanQuery): Promise<Comparison> {
   const hasBike = query.bike !== 'none';
   const [plain, withBike] = await Promise.all([
@@ -93,13 +109,23 @@ export async function compare(baseUrl: string, query: PlanQuery): Promise<Compar
         })
       : undefined,
   ]);
+  const transit =
+    plain.itineraries.length > 0
+      ? plain.itineraries
+      : (
+          await request(baseUrl, query, {
+            directModes: '',
+            maxPreTransitTime: String(FALLBACK_WALK_TO_TRANSIT_SECONDS),
+            maxPostTransitTime: String(FALLBACK_WALK_TO_TRANSIT_SECONDS),
+          })
+        ).itineraries;
   const direct = (mode: string) => plain.direct.find((motis) => motis.legs[0]?.mode === mode);
   const walk = direct('WALK');
   const bike = direct('BIKE');
   return {
     ...(walk ? { walk: itinerary(walk) } : {}),
     ...(bike ? { bike: itinerary(bike) } : {}),
-    transit: plain.itineraries.map(itinerary),
+    transit: transit.map(itinerary),
     transitBike: withBike?.itineraries.map(itinerary) ?? [],
   };
 }

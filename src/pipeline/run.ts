@@ -28,8 +28,8 @@ const feeds: { id: string; url: string; vehicles: VehicleSource }[] = [
     vehicles: 'sncf-stop-category',
   },
 ];
-// Clipped each week by the `osm` workflow: clipping needs 4 GB, more than the server has (ADR-0004).
-const osmUrl = env['OSM_URL'] ?? 'https://github.com/k1n0b0n/maillon/releases/download/osm-gironde/gironde.osm.pbf';
+// Merged each week from Geofabrik's three regions by the `osm` workflow (ADR-0007).
+const osmUrl = env['OSM_URL'] ?? 'https://github.com/k1n0b0n/maillon/releases/download/osm-area/area.osm.pbf';
 const osmMaxAgeDays = Number(env['OSM_MAX_AGE_DAYS'] ?? 7);
 const today = env['PIPELINE_TODAY'] ?? new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris' }).format(new Date());
 

@@ -1,40 +1,84 @@
 route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color
+FR:Line::0312E125-B6BC-404C-A7D1-C1600D4CACAF:,1187,K1,Toulouse Matabiau - Brive La Gaillarde,,2,,BF005F,FFFFFF
+FR:Line::03398D75-5B60-4588-BC05-9985E599BA20:,1187,R16,Ussel - Bort Les Orgues,,3,,006600,FFFFFF
+FR:Line::0359c353-2f81-4c49-a269-bc287ff237e0:,1187,L22,22. Limoges - Uzerche - Brive,,2,,3E844C,FFFFFF
+FR:Line::0732042B-024F-4BDC-AFC7-37B9EAFF657D:,1187,K9,Nantes - La Rochelle,,2,,BF005F,FFFFFF
+FR:Line::0b52b55f-8e95-413d-a81a-0316fda203af:,1187,F51,51. Bordeaux - Dax - Bayonne - Hendaye,,2,,7468AC,FFFFFF
+FR:Line::0cd3d215-2889-4612-802b-6ee0c9c4ecfc:,1187,L34,34. Périgueux - Agen,,2,,3E844C,FFFFFF
+FR:Line::0dd1bfc6-d5d1-4b2b-a9f2-6d836f81efe8:,1187,F27,27. Ussel - Tulle - Brive,,2,,7468AC,FFFFFF
 FR:Line::145aae45-17eb-45b5-b5b4-facb8b6490f3:,1187,421H,Paris - Bordeaux,,2,,,
+FR:Line::148cb049-2cd5-4f43-8640-5b4a3ae6e128:,1187,552A,Toulouse - Hendaye,,2,,,
 FR:Line::16687383-70D2-4ABA-A124-1AB6A45C0E60:,1187,533B,Bordeaux - Lille SEA,,2,,,
+FR:Line::1C59DA64-5D12-4600-9092-4E99FCBFAC7A:,1187,421I,Paris - Poitiers - La Rochelle TGV,,2,,,
 FR:Line::1f093b3e-6e5a-4365-9cd0-e5764b2c7767:,1187,L51,51. Bordeaux - Dax - Bayonne - Hendaye,,2,,3E844C,FFFFFF
+FR:Line::229ED139-9256-4B71-80BD-E7EAD93A6C9A:,1187,P11,Tours - Poitiers,,2,,006600,FFFFFF
+FR:Line::276892b7-b6aa-4a9b-a989-62f4abea526b:,1187,560B,Paris - Toulouse,,2,,,
 FR:Line::2881AC3D-A347-4440-BEF8-23ACAB159588:,1187,421B,Paris - Tarbes TGV,,2,,,
 FR:Line::338660B1-35FD-4306-969D-C99969913369:,1187,433E,Paris - Toulouse SEA,,2,,,
 FR:Line::3418b67d-a81f-4dde-b3b0-60cc96ed86f4:,1187,180A,Bordeaux - Marseille,,2,,,
 FR:Line::3ebed947-d25a-4cb1-ad23-a6db52a6f082:,1187,L42,42. Le Verdon - Macau - Bordeaux / Pessac,,2,,3E844C,FFFFFF
+FR:Line::3fc62a4f-3e29-4b02-b2f6-dcf93f0f0dd5:,1187,L24,24. Poitiers - Limoges,,2,,3E844C,FFFFFF
 FR:Line::40f9734e-088d-42d9-9e13-c91880169554:,1187,F41,41.  Bordeaux - Arcachon,,2,,7468AC,FFFFFF
 FR:Line::4887f9fc-de66-44ff-a5fe-199a0de1ca9e:,1187,L15,15. La Rochelle - Rochefort - Saintes - Bordeaux,,2,,3E844C,FFFFFF
+FR:Line::4D00EB4A-33FC-42C3-80E5-5BB350C73D9B:,1187,P11,11. Poitiers-Tours,,2,,006600,FFFFFF
 FR:Line::4a7208f4-51e7-41a5-80ad-76cdcbf74672:,1187,433I,Paris - Hendaye,,2,,,
 FR:Line::4f784834-828d-4bbf-a65d-d21599ce8dc2:,1187,L31,31. Limoges - Périgueux - Bordeaux,,2,,3E844C,FFFFFF
+FR:Line::5c3aef34-54ab-4323-8cf2-326ed5f48e74:,1187,L26,26. Limoges - Eymoutiers - Ussel,,2,,3E844C,FFFFFF
 FR:Line::60a02f18-2eca-4314-bb8f-6933a6768543:,1187,D45,45.  Bordeaux - Morcenx - Mont-de-Marsan,,2,,C31632,FFFFFF
 FR:Line::6660e3b5-b253-43c4-9e58-ece4d79481bf:,1187,L45,45.  Bordeaux - Morcenx - Mont-de-Marsan,,2,,3E844C,FFFFFF
 FR:Line::6831fb72-94d3-417c-915f-b9656db78b1a:,1187,F41+,41+. Libourne - Bordeaux - Arcachon,,2,,7468AC,FFFFFF
 FR:Line::6973a1d6-1ab5-447c-b47e-d20af934f64d:,1187,L13,13. Angoulême - Bordeaux,,2,,3E844C,FFFFFF
 FR:Line::6D267C2D-7D54-4578-9380-B2C7C75C7010:,1187,061C,Est - Bordeaux TGV,,2,,,
+FR:Line::72891bc4-fda9-41c5-aae9-1e3595d3da36:,1187,P158,Agen - Auch,,3,,006600,
 FR:Line::75711759-571a-4c6c-a9fa-57cfb79a4b2f:,1187,591A,Nantes - Bordeaux,,2,,,
 FR:Line::75E9980B-E8DF-4696-8E87-123692055B00:,1187,421A,Paris - Hendaye TGV,,2,,,
+FR:Line::75a19ec7-1b4d-491e-a88f-69b219f1dfff:,1187,L54,54. Bayonne - Cambo - Saint-Jean-Pied-de-Port,,2,,3E844C,FFFFFF
+FR:Line::7cf9756c-86fe-48ec-81dd-3fb67821f5a6:,1187,L12+,12+. Châtellerault - Poitiers - Angoulême,,2,,3E844C,FFFFFF
+FR:Line::80761D29-845F-4631-B487-63532579ED01:,1187,P65,10. Saumur -Thouars - Bressuire,,3,,006600,FFFFFF
+FR:Line::8c3b6920-35c9-4b67-b79d-434a4226e338:,1187,560D,Paris - Cahors,,2,,,
 FR:Line::9227d255-a1c8-4de7-b810-923df421bfc7:,1187,D52,52. Bordeaux - Dax - Pau - Tarbes,,2,,C31632,FFFFFF
+FR:Line::942664a6-ca84-4d0f-aa9a-8ccf0c1818b7:,1187,F54,54. Bayonne - Cambo - Saint-Jean-Pied-de-Port,,2,,7468AC,FFFFFF
 FR:Line::9684FBBE-75D8-461A-B8F4-44181F11CFBC:,1187,421D,Paris - Bordeaux - Arcachon TGV,,2,,,
+FR:Line::97ACE358-5D90-456A-8747-CF84681108B7:,1187,P4,21. Châteauroux - La Souterraine - Limoges,,2,,006600,FFFFFF
 FR:Line::9805a3d4-04d2-4122-9ac6-677255172215:,1187,D33,33. Bordeaux - Bergerac - Sarlat,,2,,C31632,FFFFFF
+FR:Line::9e92d35f-0064-41eb-ae43-d20ca6aa8da3:,1187,F11,11. Tours- Châtellerault - Poitiers,,2,,7468AC,FFFFFF
 FR:Line::A74B127A-8882-4043-BAAA-F49A6703DE54:,1187,421C,Paris - Toulouse TGV,,2,,,
+FR:Line::BE27A9C7-13DC-4189-A2DF-7DDE28924201:,1187,K5,Toulouse Matabiau - Pau,,2,,BF005F,FFFFFF
+FR:Line::CEEF1197-F417-489A-98D2-8C95DAEA80CD:,1187,P65,La Roche Sur Yon - Saumur - Tours,,2,,006600,FFFFFF
+FR:Line::D50D2493-4502-41C7-B0CE-70D8B2CDD4A5:,1187,P12,Brive La Gaillarde - Rodez,,2,,006600,FFFFFF
 FR:Line::F1B5E26F-967E-48D9-ABA8-A049ADD85807:,1187,433B,Paris - Bordeaux SEA,,2,,,
+FR:Line::F7110AB1-B407-43CF-9614-12BAB42C22DC:,1187,P57,Aurillac - Brive-La-Gaillarde,,2,,006600,FFFFFF
 FR:Line::F74CC5B5-2F44-4A9F-8336-69F30A4DEC89:,1187,003A,Nord Aquitaine TGV,,2,,,
+FR:Line::F9BD440B-D41F-4106-B2BA-B807F0635262:,1187,K11,Toulouse Matabiau - Agen,,2,,BF005F,FFFFFF
+FR:Line::FE540E4F-9FF6-4E25-BD0D-0D06A5695D40:,1187,P4,Orleans - Vierzon - Châteauroux - Argenton - Limoges,,2,,006600,FFFFFF
+FR:Line::a3958d1f-3958-4906-96a2-7e3acefb8e5c:,1187,L23,23. Limoges - Saint-Yrieix - Brive,,2,,3E844C,FFFFFF
+FR:Line::a45a3dd8-6a6b-4f95-9843-142901241f3b:,1187,D14,14. Poitiers - Niort - La Rochelle,,2,,C31632,FFFFFF
+FR:Line::a48af794-a699-4b7b-b4ad-d2e81b314aee:,1187,L25,25. Montluçon / Felletin - Guéret - Limoges,,2,,3E844C,FFFFFF
 FR:Line::a7820377-230e-419a-8573-9d4de08fc44f:,1187,D44,44. Bordeaux - Langon - Marmande - Agen,,2,,C31632,FFFFFF
 FR:Line::aae3d4d2-051a-46ec-9044-c2b69b635c88:,1187,D51,51. Bordeaux - Dax - Bayonne - Hendaye,,2,,C31632,FFFFFF
+FR:Line::af6897db-26a3-4979-beae-ad811a22d3cd:,1187,L55,55. Pau - Oloron - Bedous,,2,,3E844C,FFFFFF
 FR:Line::b75b6dc1-68f2-4102-9997-525f7709dc77:,1187,F32,32. Ussel - Brive - Périgueux - Bordeaux,,2,,7468AC,FFFFFF
 FR:Line::b8b05af7-0857-4c78-982b-5adcdd0aa039:,1187,L52,52. Bordeaux - Dax - Pau - Tarbes,,2,,3E844C,FFFFFF
 FR:Line::bfee86bc-5225-4c40-a6e6-785cfd43eae6:,1187,421E,Paris - Bordeaux,,2,,,
+FR:Line::c3f96b2e-6783-498a-9e87-3364aecbd9b5:,1187,D17,17. Niort - Saintes - Royan,,2,,C31632,FFFFFF
+FR:Line::c46956eb-b898-40c5-8eb4-4ae86d24154b:,1187,L18,18. Angoulême - Limoges,,2,,3E844C,FFFFFF
 FR:Line::c89f00c3-5bb6-4806-b9a0-44724544e64b:,1187,F43,43. Saint-Mariens - Bordeaux,,2,,7468AC,FFFFFF
+FR:Line::c9a1bd25-d84e-4bab-aa97-0c648522e2da:,1187,D22,22. Limoges - Uzerche - Brive,,2,,C31632,FFFFFF
+FR:Line::ca982433-fd5f-4d50-bb21-3f54731f486a:,1187,L53,53. Bayonne - Pau - Tarbes,,2,,3E844C,FFFFFF
+FR:Line::d283aaa9-f32b-4b43-99a9-48ecc10044ba:,1187,L17,17. Niort - Saintes - Royan,,2,,3E844C,FFFFFF
+FR:Line::d48b61ba-0334-4424-8a6e-a7add79dd1dd:,1187,L27,27. Ussel - Tulle - Brive,,2,,3E844C,FFFFFF
+FR:Line::d7cd81b0-48e7-4fea-aa91-1fe47cf27535:,1187,F15,15. La Rochelle - Rochefort - Saintes - Bordeaux,,2,,7468AC,FFFFFF
 FR:Line::daa8bf5f-7be6-4fbc-ad6a-0d2c30d39013:,1187,F42,42. Le Verdon - Macau - Bordeaux / Pessac,,2,,7468AC,FFFFFF
+FR:Line::dac9d85e-6b33-4d12-ac55-f9c9a330c1a0:,1187,L16,16. Royan - Saintes - Angoulême,,2,,3E844C,FFFFFF
+FR:Line::dd0b5971-c65c-446c-990f-7629cf07aaa0:,1187,L21,21 - Limoges- La Souterraine,,2,,3E844C,FFFFFF
 FR:Line::de0cc979-c473-4b44-afa3-48079e6337c5:,1187,L33,33. Bordeaux - Bergerac - Sarlat,,2,,3E844C,FFFFFF
 FR:Line::e0a06da9-7515-46e3-a790-975f9883185c:,1187,F44,44. Bordeaux - Langon - Marmande - Agen,,2,,7468AC,FFFFFF
 FR:Line::e27d87a9-efd7-4218-bf71-50601354df88:,1187,D15,15. La Rochelle - Rochefort - Saintes - Bordeaux,,2,,C31632,FFFFFF
 FR:Line::e3a8a728-7448-4d91-ab56-5d415d6969f2:,1187,L44,44. Bordeaux - Langon - Marmande - Agen,,2,,3E844C,FFFFFF
+FR:Line::ec7d6d78-7792-4822-be8b-5e0bab24ba62:,1187,L14,14. Poitiers - Niort - La Rochelle,,2,,3E844C,FFFFFF
 FR:Line::ec925e4f-137a-4761-914a-13d24e9ace87:,1187,D31,31. Limoges - Périgueux - Bordeaux,,2,,C31632,FFFFFF
+FR:Line::f8d44b31-cc60-468f-b077-b682835c2cbe:,1187,L12,12. Poitiers - Angoulême,,2,,3E844C,FFFFFF
+FR:Line::fc526a2c-d3e0-4ae0-b8cd-782f83e16cdd:,1187,560A,Paris - Brive,,2,,,
 FR:Line::fe22a529-93ed-4301-8a97-e1c5e11abfa1:,1187,L32,32. Ussel - Brive - Périgueux - Bordeaux,,2,,3E844C,FFFFFF
 OCESN-87547000-87671008,OCEdefault,INCONNU, -,,2,,,
 OCESN-87671008-87547000,OCEdefault,INCONNU, -,,2,,,

@@ -8,7 +8,7 @@ Stack (`docs/architecture.md`):
 
 - Engine: MOTIS 2 in its own container (ADR-0001).
 - App: Astro SSR on Node 24 with Vue 3 islands, TypeScript strict (ADR-0002).
-- Data: a nightly pipeline (TBM GTFS, SNCF GTFS, OSM Gironde) that applies the bike rules to `bikes_allowed`.
+- Data: a nightly pipeline (TBM GTFS, SNCF GTFS, OSM Nouvelle-Aquitaine) that applies the bike rules to `bikes_allowed`.
 - No database, no Redis.
 
 ## Start of a session
