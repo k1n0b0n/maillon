@@ -26,8 +26,8 @@ Numbered in the order they are written.
 | Decision | Hypothesis | Story |
 |---|---|---|
 | Routing engine | [ADR-0001](adr/0001-routing-engine.md), accepted: MOTIS 2, its geocoder too | E2.1 |
-| Application stack | Astro SSR with Vue 3 islands, TypeScript strict; Nuxt is the way out if interactivity grows | E1.1 |
-| Responsible design | Budgets from the first page, a manual audit per milestone, "partially compliant" statements | E1.1 |
+| Application stack | [ADR-0002](adr/0002-application-stack.md), accepted: Astro SSR, Vue 3 islands, TypeScript strict | E1.1 |
+| Responsible design | [ADR-0003](adr/0003-responsible-design.md), accepted: budgets in CI, a manual audit per milestone, honest statements | E1.1 |
 | Hosting and delivery | balise's final state: GHCR images, SSH deploy with a forced command, the host's nginx, release-please | E1.2 |
 | Data pipeline and bike rules | As in the overview | E2.2 |
 

@@ -67,8 +67,8 @@ A process rule changes at a retro, as an experiment with a hypothesis, a measure
 
 Replaced at the end of every session. Five items, 12 lines at most.
 
-- **Milestone:** M0, 1 of 6 stories done.
-- **Current story:** 001, E2.1 engine spike: MOTIS 2 (ADR-0001), in review.
-- **Follow-ups after merge:** none.
-- **Next:** E1.1 skeleton and gates, then E1.2 delivery (the search p95 on the server), then E2.2 nightly data.
+- **Milestone:** M0, 2 of 6 stories done.
+- **Current story:** 002, E1.1 skeleton and gates (ADR-0002, ADR-0003), in review.
+- **Follow-ups after merge:** make `ci` and `pr-title` required in the `main` ruleset; install the Renovate app.
+- **Next:** E2.2 nightly data, E2.3 golden routes in CI, E3.1 first search; E1.2 delivery needs the maintainer on the server.
 - **Blockers:** none.

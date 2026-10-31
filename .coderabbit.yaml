@@ -17,6 +17,9 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+    # Stacked pull requests target another story's branch.
+    base_branches:
+      - ".*"
     # The open-source plan allows about one review an hour: one review per pull request, when it opens.
     auto_incremental_review: false
     # Planning pull requests are reviewed by the maintainer only.
