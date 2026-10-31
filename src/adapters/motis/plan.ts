@@ -15,6 +15,7 @@ interface MotisLeg {
   distance?: number;
   routeShortName?: string;
   headsign?: string;
+  tripTo?: MotisPlace;
   legGeometry?: { points: string; precision: number };
 }
 
@@ -35,7 +36,13 @@ const ENDS = new Set(['START', 'END']);
 /** The engine's own limit on a direct walk or ride: without it, MOTIS drops a walk over 30 minutes. */
 const MAX_DIRECT_SECONDS = 6 * 60 * 60;
 
+/** SNCF trains give their number as headsign: the trip's last stop says where they go. */
+function headsign(motis: MotisLeg): string | undefined {
+  return /^\d+$/.test(motis.headsign ?? '') ? motis.tripTo?.name : motis.headsign;
+}
+
 function leg(motis: MotisLeg): Leg {
+  const towards = headsign(motis);
   return {
     mode: MODES[motis.mode] ?? 'other',
     from: ENDS.has(motis.from.name) ? '' : motis.from.name,
@@ -44,7 +51,7 @@ function leg(motis: MotisLeg): Leg {
     arrival: new Date(motis.endTime),
     ...(motis.distance === undefined ? {} : { distanceMeters: Math.round(motis.distance) }),
     ...(motis.routeShortName ? { line: motis.routeShortName } : {}),
-    ...(motis.headsign ? { headsign: motis.headsign } : {}),
+    ...(towards ? { headsign: towards } : {}),
     ...(motis.legGeometry ? { path: decodePolyline(motis.legGeometry.points, motis.legGeometry.precision) } : {}),
   };
 }

@@ -26,4 +26,25 @@ describe('itinerary', () => {
     expect(mapped.legs[1]).toMatchObject({ line: 'F', headsign: 'Mérignac Aéroport', to: 'Tauzia' });
     expect(mapped.arrival.toISOString()).toBe('2026-10-27T09:41:00.000Z');
   });
+
+  it("heads a train to its last stop when its headsign is the train's number", () => {
+    const mapped = itinerary({
+      startTime: '2026-11-03T11:27:00Z',
+      endTime: '2026-11-03T13:20:00Z',
+      legs: [
+        {
+          mode: 'REGIONAL_RAIL',
+          from: { name: 'Bordeaux Saint-Jean' },
+          to: { name: 'Thenon' },
+          startTime: '2026-11-03T11:27:00Z',
+          endTime: '2026-11-03T13:20:00Z',
+          routeShortName: 'L32',
+          headsign: '865214',
+          tripTo: { name: 'Tulle' },
+        },
+      ],
+    });
+
+    expect(mapped.legs[0]).toMatchObject({ line: 'L32', headsign: 'Tulle' });
+  });
 });
